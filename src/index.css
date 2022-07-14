@@ -11,6 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.spinner {
+  display: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+.auth_form label {
+  font-weight: 600;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
