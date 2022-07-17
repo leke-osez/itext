@@ -11,6 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.body_screen {
+  height: calc(100vh - 70px);
+}
 .spinner {
   display: fixed !important;
   top: 50% !important;
@@ -19,6 +22,30 @@ code {
 }
 .auth_form label {
   font-weight: 600;
+}
+.profile_avatar {
+  width: 200px !important;
+  height: 200px !important;
+  background-color: aquamarine !important;
+}
+
+.camera_icon {
+  width: 20px !important;
+  height: 20px !important;
+}
+.usersAvatar {
+  width: 3.7rem !important;
+  height: 3.7rem !important;
+}
+.upload_image {
+  width: 30px !important;
+  height: 30px !important;
+}
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 @tailwind base;
 @tailwind components;
