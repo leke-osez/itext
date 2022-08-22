@@ -9,10 +9,11 @@ import DropModal from "./dropsBox/DropModal";
 import { useStateAuth } from "../context/Auth";
 import SignOutModal from "./SignOutModal";
 import CommentModal from "./dropPage/CommentModal";
+import EditModal from "./profile/EditModal";
 
 const Layout = () => {
   const location = useLocation();
-  const { dropModal, setDropModal, setAcctMenu, signOutModal, setSignOutModal, commentModal, setCommentModal } = useStateAuth();
+  const { dropModal, setDropModal, setAcctMenu, signOutModal, setSignOutModal, commentModal, setCommentModal, editModal, setEditModal } = useStateAuth();
 
   // EXTRACT WINDOW LOCATION FROM PATH;
   const locationExtractor = (path) => {
@@ -57,11 +58,17 @@ const Layout = () => {
 
       {/* Modal for comment */}
       {commentModal && (
-        <Modal setSignOutModal = {setCommentModal}>
+        <Modal setCommentModal = {setCommentModal}>
           <CommentModal />
         </Modal>
       )}
 
+      {/* Modal for comment */}
+      {editModal && (
+        <Modal setEditModal = {setEditModal}>
+          <EditModal />
+        </Modal>
+      )}
       {/* PAGE LAYOUT */}
       <div
         className={`sticky left-0 top-0 hidden sm:flex sm:w-fit md:w-[20%] min-w-fit ${

@@ -24,7 +24,8 @@ export const AuthProvider = ({ children }) => {
   // MODAL STATES
   const [dropModal, setDropModal] = useState(false);
   const [signOutModal, setSignOutModal] = useState(false);
-  const [commentModal, setCommentModal] = useState(false)
+  const [commentModal, setCommentModal] = useState(false);
+  const [editModal, setEditModal] = useState(false)
 
 
   // ACCOUNT MENU
@@ -49,7 +50,8 @@ export const AuthProvider = ({ children }) => {
     drops, setDrops,
     activeDrop, setActiveDrop,
     userRecommendations, setUserRecommendations,
-    commentModal, setCommentModal
+    commentModal, setCommentModal,
+    editModal, setEditModal
   };
 
   useEffect(() => {

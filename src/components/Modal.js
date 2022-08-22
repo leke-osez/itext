@@ -4,11 +4,13 @@ import { useStateAuth } from '../context/Auth';
 
 
 const Modal = ({children, handleClick, }) => {
-  const {setDropModal, setSignOutModal, setCommentModal} = useStateAuth()
+  const {setDropModal, setSignOutModal, setCommentModal, setEditModal} = useStateAuth()
   const handleModal = ()=>{
     setDropModal(false); 
     setSignOutModal(false);
     setCommentModal(false);
+    setEditModal(false);
+
   };
   return (
     <div className='fixed top-0 left-0 h-screen right-0 z-[100] bg-black/30' onClick={handleModal}>

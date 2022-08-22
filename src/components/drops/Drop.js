@@ -38,7 +38,7 @@ const Drop = ({ drop, likeDrop }) => {
       <div className="w-full">
         
         {/* DROP META */}
-        <div className="flex items-end mb-3">
+        <div className="flex items-end mb-1">
           {/* AUTHOR NAME */}
           <div className=" border-r-[.2px] px-1 text-sm">
             <p className=" text-black/90 font-medium    ">
@@ -54,7 +54,7 @@ const Drop = ({ drop, likeDrop }) => {
           <p className=" text-black/60 ml-3 text-sm"><Moment fromNow >{drop?.createdAt.toDate()}</Moment></p>
         </div>
 
-        <div className={`flex flex-col p-4 w-full cursor-pointer hover:bg-slate-400/20 ${drop?.dropFilePath.length && 'border-[.2px] rounded-lg'}`} onClick = {openDrop}>
+        <div className={`flex flex-col w-full cursor-pointer hover:bg-slate-400/20 ${drop?.dropFilePath.length && 'border-[.2px] rounded-lg'}`} onClick = {openDrop}>
           
           {/* TEXT */}
           <p className="w-full max-w-[600px] text-base text-black font-medium  mb-4">
