@@ -14,11 +14,12 @@ import {
   TextareaAutosize,
   TextField,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import { useStateAuth } from "../context/Auth";
 import { borderColor } from "@mui/system";
 import { DeleteForeverRounded, Edit } from "@mui/icons-material";
 import ProfilePic from "../components/profile/ProfilePic";
+import TabTitle from "../components/profile/TabTitle";
 
 const Profile = ({ image }) => {
   const [pic, setPic] = useState(image ? image : "");
@@ -27,8 +28,11 @@ const Profile = ({ image }) => {
 
   const { setUser, user, setUserProfile, userProfile, setEditModal } =
     useStateAuth();
+
   const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [profileHeight, setProfileHeight] = useState(0);
+  console.log(profileHeight);
 
   // hold previous state where state gets cleared
   const [prevprofile, setPrevProfile] = useState({
@@ -85,6 +89,8 @@ const Profile = ({ image }) => {
       console.log(err);
     }
   };
+
+  const [activeState, setActiveState] = useState({ tweets: true });
 
   const handleCancel = () => {
     if (!name.trim()) {
@@ -149,83 +155,90 @@ const Profile = ({ image }) => {
   if (profile) {
     return (
       <div>
-        <ProfilePic AVI={profile?.avatar} />
-        {userId === auth.currentUser.uid && <button
-          className="mt-2 px-4  rounded-full border-black/70 border-[.125rem] float-right md:font-medium mr-3"
-          onClick={() => setEditModal(true)}
-        >
-          Edit
-        </button>}
+        <ProfilePic AVI={profile?.avatar} setProfileHeight={setProfileHeight} />
+        {userId === auth.currentUser.uid && (
+          <button
+            className="mt-2 px-4  rounded-full border-black/70 border-[.125rem] float-right md:font-medium mr-3"
+            onClick={() => setEditModal(true)}
+          >
+            Edit Profile
+          </button>
+        )}
 
-        <div
-          className="flex justify-start mt-6 md:mt-10 h-screen w-full"
-        >
-          <div className="flex flex-col justify-start items-start px-3 mt-4">
-            
-            <p className="text-black/70 mb-2 font-semibold">
-              Joined on:{" "}
+        <div className="flex justify-start w-full mt-[10%]">
+          <div className="flex flex-col justify-start items-start px-3 mt-4 w-full">
+            {/* NAME */}
+            <div className="mb-3">
+              <div className="flex gap-4">
+                <p className="font-semibold">
+                  @{userId === user.uid ? userProfile?.name : profile?.name}
+                </p>
+              </div>
+            </div>
+
+            {/* BIO */}
+            <div className="w-full">
+              <p className="font-semibold">Bio</p>
+
+              <p className="w-[70%]">
+                {userId === user.uid ? userProfile?.bio : profile?.bio}
+              </p>
+            </div>
+
+            {/* DATE JOINED */}
+            <p className="text-black/70 mb-2 font-semibold mt-3">
+              Joined{" "}
               <span className="text-sm font-normal">
                 {profile?.createdAt?.toDate()?.toDateString()}
               </span>
             </p>
 
-            <div className="mb-3">
-              {isEdit ? (
-                <TextField
-                  type="text"
-                  name="name"
-                  label="name"
-                  value={name}
-                  onChange={handleChangeText}
-                />
-              ) : (
-                <div className="flex gap-4">
-                  <p className="font-semibold">
-                    @{userId === user.uid ? userProfile?.name : profile?.name}
-                  </p>
-                </div>
-              )}
+            <div className="flex gap-2">
+              <button className="flex gap-1">
+                {profile?.following?.length}{" "}
+                <p className="text-black/70">Following</p>
+              </button>
+              <button className="flex gap-1">
+                {profile?.followers?.length}{" "}
+                <p className="text-black/70">Followers</p>
+              </button>
             </div>
-            <div>
-              <p className="font-semibold">Bio</p>
-              {isEdit ? (
-                <>
-                  <TextareaAutosize
-                    type="text"
-                    name="bio"
-                    label="bio"
-                    value={bio}
-                    minRows={3}
-                    onChange={handleChangeText}
-                    style={{ width: 200, border: 2, borderColor: "gray" }}
-                    placeholder="Say something about you..."
-                  />
-                </>
-              ) : (
-                <div>
-                  <p className="w-100px">
-                    {userId === user.uid ? userProfile?.bio : profile?.bio}
-                  </p>
-                </div>
-              )}
-            </div>
-            {isEdit ? (
-              <div className="w-full">
-                <p
-                  onClick={handleSaveText}
-                  className="float-right bg-orange-500 text-white rounded-full py-1 px-2"
-                >
-                  Save
-                </p>
-              </div>
-            ) : (
-              ""
-            )}
           </div>
-
-          {/* <div>
-          <p>Gallery</p>
-        </div> */}
+        </div>
+        <div className="profilePage__body">
+          <div className="profilePage__pageTitle flex justify-around">
+            <Link to={`tweets`} replace={true}>
+              <TabTitle
+                text="Tweets"
+                isActive={activeState?.tweets}
+                name="tweets"
+              />
+            </Link>
+            <Link to="with_replies" replace={true}>
+              <TabTitle
+                text="Tweets & replies"
+                isActive={activeState?.with_replies}
+                name="tweetsNR"
+              />
+            </Link>
+            <Link to="media" replace={true}>
+              <TabTitle
+                text="Media"
+                isActive={activeState?.media}
+                name="media"
+              />
+            </Link>
+            <Link to="likes" replace={true}>
+              <TabTitle
+                text="Likes"
+                isActive={activeState?.likes}
+                name="likes"
+              />
+            </Link>
+          </div>
+          <section>
+            <Outlet />
+          </section>
         </div>
       </div>
     );

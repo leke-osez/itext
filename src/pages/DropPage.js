@@ -28,11 +28,13 @@ import { useParams } from 'react-router-dom';
 
 
 const DropPage = ({dropPage}) => {
-  const {activeDrop, userProfile} = useStateAuth();
+  const {activeDrop, userProfile, drops, setDrops} = useStateAuth();
   const [dropText, setDropText] = useState('');
   const [comments, setComments] = useState(null)
   const params = useParams()
-  const dropId = params.id
+
+  const dropId = params.id;
+
   const handleChangeText = e=>{
     setDropText(e.target.value)
   }
@@ -61,6 +63,38 @@ const DropPage = ({dropPage}) => {
 
   }
 
+  const likeDrop  = async(drop)=>{
+    const dropLikes = ()=>{
+      const dropIndex = drops.findIndex(dropItem=>dropItem.id === drop.id)
+      const dropItem = drops[dropIndex]
+      const isLiked = dropItem.likes.findIndex(like => like === drop.likeId)
+       // NOT LIKED
+       if (isLiked === -1){
+        return [drop.likeId,...dropItem.likes]
+      }
+      return dropItem.likes.filter(like=> like !== drop.likeId)
+    }
+
+    // DATABASE UPDATE
+    try {
+      const docRef = doc(db, "drop", drop.id )
+      await updateDoc(docRef, {
+        likes: dropLikes()
+    });
+
+    // UI UPDATE
+      setDrops(drops.map((dropItem)=>{
+        if (dropItem.id === drop?.id){
+          return{...dropItem, likes: dropLikes()}
+        }
+        return dropItem
+      }))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
   useEffect(() => {
 
     const msgsRef = collection(db, 'comments', dropId, 'comment');
@@ -88,7 +122,7 @@ const DropPage = ({dropPage}) => {
   }, []);
   return (
     <div className='p-3'>
-        <DropOwner drop={activeDrop} />
+        <DropOwner drop={activeDrop} likeDrop = {likeDrop}/>
         <CommentBox user = {userProfile} onChangeText = {handleChangeText} dropText = {dropText} handleSubmit = {handleSubmit}/>
         {comments && <CommentList comments = {comments}/>}
     </div>

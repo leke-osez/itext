@@ -7,7 +7,13 @@ import { Avatar } from "@mui/material";
 import Moment from 'react-moment'
 
 
-const DropOwner = ({drop}) => {
+const DropOwner = ({drop, likeDrop}) => {
+
+  const {userProfile} = useStateAuth()
+  const handleLike = ()=>{
+
+    likeDrop({id:drop?.id, likeId:userProfile.uid})
+  }
   return (
     <div className="flex items-start mb-5">
       {/* DROP AVATAR */}
@@ -94,7 +100,7 @@ const DropOwner = ({drop}) => {
           
           {/* DROP ACTIONS */}
           <div className="border-[.1px] rounded-b-lg flex justify-center gap-10 font-thin w-full max-w-[600px] py-2">
-              <DropAction DropIcon={UilHeartAlt} text = {drop?.likes.length}/>
+              <DropAction DropIcon={UilHeartAlt} text = {drop?.likes.length} handleClick= {handleLike}/>
               <DropAction DropIcon={UilComment} text ={drop?.comments}/>
           </div>
         </div>

@@ -27,6 +27,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { CircularProgress } from "@mui/material";
 import DropsBox from "../components/dropsBox/DropsBox";
 import DropsList from "../components/drops/DropsList";
+import Drops from "./Drops";
 
 const Home = () => {
   const user1 = auth.currentUser.uid;
@@ -71,6 +72,8 @@ const Home = () => {
         <div className = 'mb-[4rem]'>
           <DropsBox user = {userProfile} />
         </div>
+        <Drops/>
+
       </div>
     </div>
   )
