@@ -5,7 +5,19 @@ module.exports = {
 
   ],
   theme: {
-    extend: {},
+    
+    extend: {
+      colors:{
+        'textColor' : '#eca642',
+        'bodyColor' : '#eca642',
+      },
+      fontSize:{
+        'base' : '14px'
+      },
+      screens:{
+        md: '780px'
+      }
+    },
   },
   plugins: [],
 }

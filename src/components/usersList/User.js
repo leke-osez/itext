@@ -5,7 +5,7 @@ import { onSnapshot, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { CameraAlt } from "@mui/icons-material";
 
-const User = ({ profile, lastMssg, selectedUser, isUserList, user1 , smallView}) => {
+const User = ({ profile, selectedUser, isUserList, user1 }) => {
   const { chat } = useStateAuth();
 
   const user2 = profile?.uid;
@@ -18,7 +18,6 @@ const User = ({ profile, lastMssg, selectedUser, isUserList, user1 , smallView})
   useEffect(() => {
     const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
     let unsub = onSnapshot(doc(db, "lastMsg", id), (doc) => {
-      console.log(doc.data());
       setData(doc.data());
     });
 
@@ -29,7 +28,7 @@ const User = ({ profile, lastMssg, selectedUser, isUserList, user1 , smallView})
       className={`w-full flex items-center gap-4  cursor-pointer  ${
         isUserList && "sm:px-4 py-2 mb-3"
       } ${chat?.uid === user2 && isUserList ? "bg-slate-600/10" : ""}`}
-      onClick={selectUser }
+      onClick={selectedUser ? selectUser : null }
     >
       <Avatar src={avatar} className="usersAvatar" />
       <div className="flex flex-col w-full">
@@ -48,7 +47,7 @@ const User = ({ profile, lastMssg, selectedUser, isUserList, user1 , smallView})
                 data.lastMsg
               ) : (
                 <>
-                  New File <CameraAlt />
+                  <CameraAlt className = 'camera__logo'/>
                 </>
               )}
             </p>

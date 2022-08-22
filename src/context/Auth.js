@@ -1,32 +1,55 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { auth, db } from "../lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import Loading from "../components/Loading";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, limit, query, updateDoc } from "firebase/firestore";
+import {collection, getDocs, where} from 'firebase/firestore';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [test, setTest] = useState("test");
 
+  // AUTHENTICATION AND USERS
+  const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [appUsers, setAppUsers] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // CHAT STATES
   const [chat, setChat ]= useState(null);
+  const [chatList, setChatList] = useState(true);
+  // cache messages 
+  const [messages, setMessages] = useState({})
+  
+  // MODAL STATES
+  const [dropModal, setDropModal] = useState(false);
+  const [signOutModal, setSignOutModal] = useState(false);
+  const [commentModal, setCommentModal] = useState(false)
 
 
+  // ACCOUNT MENU
+  const [acctMenu, setAcctMenu] = useState(false);
+
+
+  //DROPS
+  const [drops, setDrops] = useState([]);
+  const [activeDrop, setActiveDrop] = useState(null)
+
+  // USER RECOMMENDATIONS
+  const [userRecommendations, setUserRecommendations] = useState([])
   const value = {
-    user,
-    setUser,
-    userProfile,
-    setUserProfile,
-    test,
-    setTest,
-    appUsers,
-    setAppUsers,
-    chat,
-    setChat,
+    user, setUser, 
+    userProfile, setUserProfile,
+    appUsers, setAppUsers,
+    chat, setChat,
+    chatList, setChatList,
+    dropModal, setDropModal,
+    acctMenu, setAcctMenu,
+    signOutModal, setSignOutModal,
+    drops, setDrops,
+    activeDrop, setActiveDrop,
+    userRecommendations, setUserRecommendations,
+    commentModal, setCommentModal
   };
 
   useEffect(() => {
@@ -35,6 +58,64 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    if(!userProfile && auth?.currentUser?.uid){getDoc(doc(db, "users",auth.currentUser.uid )).then((docsnap) => {
+      if (docsnap.exists()) {
+        setUserProfile(docsnap.data());
+      }
+    });}
+  }, [auth?.currentUser?.uid]);
+
+  useEffect(()=>{
+    window.addEventListener("unload",(event)=>{return signOut(event)});
+
+    return () => {
+      window.removeEventListener('unload', (event)=>{return logout(event)})
+
+    }
+
+  })
+
+  useEffect(() => {
+
+    // GET USER RECOMMENDATIONS
+    const getRecommendations = async()=>{
+    try{
+        const recommendations = []
+        const q = query(collection(db, 'users'), where("uid", "!=", `${auth?.currentUser?.uid}` ), limit(10))
+        const userRec = await getDocs(q)
+
+        userRec.forEach(user=>{
+          recommendations.push(user.data())
+        })
+        setUserRecommendations(recommendations)
+      }
+    
+    catch(error){
+
+      console.log(error)
+    }
+  }  
+    return () => {
+      getRecommendations()
+    };
+  }, [user]);
+
+  const logout = (ev) => {  
+    ev.preventDefault();
+      
+        try {
+          updateDoc(doc(db, "users", auth.currentUser.uid), {
+            isOnline: false,
+          })
+          
+        } catch (err) {
+          console.log(err);
+        }
+      
+     
+}
   if (loading) {
     return <Loading />;
   }

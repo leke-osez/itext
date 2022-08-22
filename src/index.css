@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap');
+
+
+/* BASE STYLES */
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -11,14 +19,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-.body_screen {
-  height: calc(100vh - 70px);
-}
+
 .spinner {
   display: fixed !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
+}
+
+:root{
+  --text-color: #eca642;
+  --space-color: #eca642
+}
+
+.body_screen {
+  height: calc(100vh - 70px);
 }
 .auth_form label {
   font-weight: 600;
@@ -26,7 +41,7 @@ code {
 .profile_avatar {
   width: 200px !important;
   height: 200px !important;
-  background-color: aquamarine !important;
+  background-color: #eca54257 !important;
 }
 
 .camera_icon {
@@ -34,8 +49,8 @@ code {
   height: 20px !important;
 }
 .usersAvatar {
-  width: 3.7rem !important;
-  height: 3.7rem !important;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
 }
 .upload_image {
   width: 30px !important;
@@ -46,6 +61,68 @@ code {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+}
+
+.camera__logo{
+  color: rgba(0, 0, 0, 0.4);
+
+}
+
+.stroke{
+  -webkit-text-stroke: .1rem #eca642;
+
+}
+
+/* INDEX STYLES */
+.index__image{
+
+}
+.memphis_bg{
+  background-image: url('/public/memphis_lgn.jpg');
+  background-size: 800px;
+  background-repeat: repeat !important;
+}
+
+.auth__banner-title{
+  font-weight: 600;
+  line-height: 1.2
+}
+.auth__banner-features-text{
+  font-weight:700;
+  line-height: 1.2;
+  -webkit-text-stroke: .1rem #eca642;
+
+}
+
+/* SIDE MENU */
+.sidemenu__contents{
+  height: calc(100% - 6rem)
+}
+.sidemenu__icon{
+  font-size: 4rem !important;
+}
+
+/* DROP */
+.avatar{
+  width: 2.8rem !important;
+  height: 2.8rem !important
+}
+.drop__icon{
+  font-weight: 200 !important
+}
+
+.row_span_2{
+  grid-row: 1 / span 2;
+}
+
+.col_span_2{
+  grid-column: 1 / span 2;
+}
+
+/* WIDGETS */
+.recommended__avatar{
+  width: 2.3rem  !important;
+  height: 2.3rem !important
 }
 @tailwind base;
 @tailwind components;

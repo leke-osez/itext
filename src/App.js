@@ -1,73 +1,107 @@
 import "./App.css";
 import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
-import Home from "./pages/Home";
+import Messages from "./pages/Messages";
 import Auth from "./pages/Auth";
-import Navbar from "./components/Navbar";
-import { AuthProvider, useStateAuth } from "./context/Auth";
-import PrivateRoute from "./components/PrivateRoute";
-import Profile from "./pages/Profile";
-import UsersList from "./components/usersList/UsersList";
+import Home from "./pages/Home";
 import Friends from "./pages/Friends";
-import Chat from "./components/Chat";
+import Profile from "./pages/Profile";
+
+import Navbar from "./components/Navbar";
+import { AuthProvider } from "./context/Auth";
+import PrivateRoute from "./components/PrivateRoute";
+import Chat from "./components/chat/Chat";
+import Layout from "./components/Layout";
 import { useState } from "react";
+import Drops from "./pages/Drops";
+import DropPage from "./pages/DropPage";
 
 function App() {
-  const [ isMenu, setIsMenu] = useState(false);
+  const [isMenu, setIsMenu] = useState(false);
 
-  const showMenu = ()=>{
-    setIsMenu(prev=> !prev)
-  }
+  const showMenu = () => {
+    setIsMenu((prev) => !prev);
+  };
 
-  const cancelMenu = ()=>{
-    setIsMenu(false)
-  }
+  const cancelMenu = () => {
+    setIsMenu(false);
+  };
   return (
-    <div className="h-screen" >
+    <div className="h-screen">
       <Router>
         <AuthProvider>
-          <Navbar isMenu = {isMenu} showMenu = {showMenu} cancelMenu = {cancelMenu}/>
           <div onClick={cancelMenu}>
+            <Routes>
+              {/* LAYOUT ROUTE */}
+              <Route path="/" element={<Layout />}>
 
-          <Routes>
-            <Route
-              exact
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Home />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              exact
-              path="/profile"
-              element={
-                <PrivateRoute>
-                  <Profile />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              exact
-              path="/chat/:messageid"
-              element={
-                <PrivateRoute>
-                  <Chat />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              exact
-              path="/friends"
-              element={
-                <PrivateRoute>
-                  <Friends />
-                </PrivateRoute>
-              }
-            />
-            <Route path="/signup" element={<Auth signUp={true} />} />
-            <Route path="/signin" element={<Auth />} />
-          </Routes>
+                {/* MESSAGES ROUTE */}
+                <Route
+                  exact
+                  path="/chat"
+                  element={
+                    <PrivateRoute>
+                      <Messages />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/"
+                  element={
+                    <PrivateRoute>
+                      <Home />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profile/:userId"
+                  element={
+                    <PrivateRoute>
+                      <Profile />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/chat/:messageid"
+                  element={
+                    <PrivateRoute>
+                      <Chat />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/drops"
+                  element={
+                    <PrivateRoute>
+                      <Drops />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/drop/:id`}
+                  element={
+                    <PrivateRoute>
+                      <DropPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/friends"
+                  element={
+                    <PrivateRoute>
+                      <Friends />
+                    </PrivateRoute>
+                  }
+                />
+                
+              </Route>
+              <Route path="/signup" element={<Auth signUp={true} />} />
+                <Route path="/signin" element={<Auth />} />
+            </Routes>
           </div>
         </AuthProvider>
       </Router>

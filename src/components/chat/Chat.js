@@ -20,12 +20,12 @@ import {
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
-import { auth, db, storage } from "../lib/firebase";
-import { useStateAuth } from "../context/Auth";
-import User from "../components/usersList/User";
-import MessageForm from "../components/MessageForm";
+import { auth, db, storage } from "../../lib/firebase";
+import { useStateAuth } from "../../context/Auth";
+import User from "../usersList/User";
+import MessageForm from "./MessageForm";
 import CloseIcon from '@mui/icons-material/Close';
-import Message from "../components/Message";
+import Message from "./Message";
 
 const Chat = () => {
 

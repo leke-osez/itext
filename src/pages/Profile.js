@@ -14,21 +14,30 @@ import {
   TextareaAutosize,
   TextField,
 } from "@mui/material";
+import {useParams} from 'react-router-dom'
 import { useStateAuth } from "../context/Auth";
 import { borderColor } from "@mui/system";
 import { DeleteForeverRounded, Edit } from "@mui/icons-material";
 
 const Profile = ({ image }) => {
   const [pic, setPic] = useState(image ? image : "");
+
+  const {userId} = useParams()
+
   const { setUser, user, setUserProfile, userProfile } = useStateAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [isPhotoEdit, setIsPhotoEdit] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
 
+  // hold previous state where state gets cleared 
+  const [prevprofile, setPrevProfile] = useState({
+    name: userProfile?.name,
+    bio: userProfile?.bio,
+  });
+
   const [profile, setProfile] = useState({
-    name: "",
-    bio: "",
+    name: userProfile?.name,
+    bio: userProfile?.bio,
     prevPic: image ? image : "",
   });
   const { name, bio } = profile;
@@ -42,6 +51,7 @@ const Profile = ({ image }) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
   const handleSaveText = async (e) => {
+    if (!name?.trim()) return handleCancel()
     updateDoc(doc(db, "users", auth.currentUser.uid), {
       name,
       bio,
@@ -49,7 +59,9 @@ const Profile = ({ image }) => {
       getDoc(doc(db, "users", auth.currentUser.uid)).then((docsnap) => {
         if (docsnap.exists) {
           setUserProfile(docsnap.data());
+          setPrevProfile(profile)
           setIsLoading(false);
+          setIsEdit(false)
         }
       });
     });
@@ -80,13 +92,24 @@ const Profile = ({ image }) => {
     
   }
 
+  const handleCancel = ()=>{
+    if (!name.trim()){
+      setProfile({prevprofile})
+    }
+    setIsEdit(false)
+
+  }
+
   useEffect(() => {
-    if (!userProfile){getDoc(doc(db, "users", auth.currentUser.uid)).then((docsnap) => {
+      const id = userId === auth.currentUser.uid ? auth.currentUser.uid : userId
+      getDoc(doc(db, "users", id)).then((docsnap) => {
       if (docsnap.exists) {
-        setUserProfile(docsnap.data());
-        // setProfile({name:docsnap.data().name, bio: docsnap.data().bio ? docsnap.data().bio:''})
+         setProfile({...profile, ...docsnap.data()})
+        if (userId === auth.currentUser.uid) setUserProfile({...userProfile, ...docsnap.data()})
+
       }
-    });}
+
+    });
     if (pic) {
       const uploadPic = async () => {
         const imgRef = ref(
@@ -104,6 +127,8 @@ const Profile = ({ image }) => {
           }).then(() => {
             
                 setUserProfile({...userProfile, avatar: url,
+                  avatarPath: snap.ref.fullPath,});
+                setProfile({...profile, avatar: url,
                   avatarPath: snap.ref.fullPath,});
                 setIsLoading(false);
               }
@@ -125,22 +150,24 @@ const Profile = ({ image }) => {
       uploadPic();
     }
     setPic("");
-  }, [pic]);
+  }, [pic,userId]);
 
-  if (userProfile) {
+
+
+  if (profile ) {
     return (
       <div className="flex justify-center mt-6 md:mt-10 h-screen w-full" onClick={()=>setIsPhotoEdit(false)}>
         <div className="flex flex-col justify-start items-start px-3">
           <div className="flex items-end mb-4 relative ">
             <div className="relative w-fit h-fit">
-              <Avatar src={userProfile.avatar } className="profile_avatar" />
+              <Avatar src={profile.avatar } className="profile_avatar" />
               {isLoading && (
                 <div className="absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%]">
                   <CircularProgress />
                 </div>
               )}
             </div>
-              <div className="relative h-[30px] text-sm">
+              <div className={`relative h-[30px] text-sm ${userId !== user.uid ? 'hidden' : ''}`}>
                 <button onClick={(e)=>{
                   e.stopPropagation()
                   setIsPhotoEdit(true)}}><Edit/></button>
@@ -167,9 +194,9 @@ const Profile = ({ image }) => {
               id="pic"
               onChange={handleChangePic}
             />
-          <div className="h-full ">
+          <div className={`h-full ${userId !== user.uid ? 'hidden' : ''}`} >
             {isEdit ? (
-          <p onClick={() => setIsEdit(false)} className="text-red-600 h-fit cursor-pointer">
+          <p onClick={handleCancel} className="text-red-600 h-fit cursor-pointer">
             Cancel
           </p>
         ) : (
@@ -182,7 +209,7 @@ const Profile = ({ image }) => {
           <p className="text-black/70 mb-2 font-semibold">
             Joined on:{" "}
             <span className="text-sm font-normal">
-              {userProfile.createdAt.toDate().toDateString()}
+              {profile?.createdAt?.toDate()?.toDateString()}
             </span>
           </p>
 
@@ -192,19 +219,19 @@ const Profile = ({ image }) => {
                 type="text"
                 name="name"
                 label="name"
-                value={name }
+                value={name}
                 onChange={handleChangeText}
               />
             ) : (
               <div className="flex gap-4">
-                <p className="font-semibold">{userProfile.name}</p>
+                <p className="font-semibold">@{userId === user.uid ? userProfile?.name : profile?.name}</p>
               </div>
             )}
           </div>
           <div>
+          <p className="font-semibold">Bio</p>
             {isEdit ? (
               <>
-                <p>bio</p>
 
                 <TextareaAutosize
                   type="text"
@@ -219,9 +246,8 @@ const Profile = ({ image }) => {
               </>
             ) : (
               <div>
-                <p>Bio</p>
                 <p className="w-100px">
-                  {userProfile.bio ? userProfile.bio : ""}
+                  {userId === user.uid ? userProfile?.bio : profile?.bio}
                 </p>
               </div>
             )}
