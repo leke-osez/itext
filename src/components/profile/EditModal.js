@@ -1,4 +1,4 @@
-import { TextareaAutosize, TextField } from "@mui/material";
+import { CircularProgress, TextareaAutosize, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ProfilePic from "./ProfilePic";
 import { storage, db, auth } from "../../lib/firebase";
@@ -76,28 +76,28 @@ const EditModal = ({ image }) => {
 
   const handleSave = ()=>{
     const id = auth?.currentUser?.uid
-
+      setIsLoading(true)
       // CHECK FOR CHANGES IN THE FORM FIELD
        const changes = {}
         Object.keys(profile).forEach(item=>{
-          if ((profile[item] === userProfile[item]) ){
+          if ((profile[item] !== userProfile[item]) &&  userProfile.hasOwnProperty(item)){
             
             changes[item] = profile[item]
           }
         })
-        console.log(changes)
       const uploadPic = async () => {
 
-        const fileData =  {avatarSnap:null, avatarUrl:null, bgImgSnap:null, bgImgUrl: null}
+        const fileData =  {avatar:null, avatarPath:null, bgImg:null, bgImgPath: null}
         if (changes.avatar){
           const avatarRef = ref(
             storage,
-            `avatar/${new Date().getTime()}-${pic.name}`
+            `avatar/${new Date().getTime()}-${changes.avatar.name}`
           );
 
           try {
-             fileData.avatarSnap = await uploadBytes(avatarRef, pic);
-             fileData.avatarUrl = await getDownloadURL(ref(storage, fileData.avatarSnap.ref.fullPath));
+             const avatarSnap = await uploadBytes(avatarRef, pic);
+             fileData.avatarPath = avatarSnap.ref.fullPath
+             fileData.avatar = await getDownloadURL(ref(storage, avatarSnap.ref.fullPath));
           } catch (err) {
             console.log(err);
           }
@@ -106,11 +106,12 @@ const EditModal = ({ image }) => {
         if (changes.bgImg){
           const bgImgRef = ref(
             storage,
-            `bgImg/${new Date().getTime()}-${pic.name}`
+            `bgImg/${new Date().getTime()}-${changes.avatar.name}`
           );
           try {
-            fileData.bgImgSnap = await uploadBytes(bgImgRef, pic);
-            fileData.bgImgUrl = await getDownloadURL(ref(storage, fileData.bgImgSnap.ref.fullPath));
+            const bgImgSnap = await uploadBytes(bgImgRef, pic);
+            fileData.bgImgPath = bgImgSnap.ref.fullPath
+            fileData.bgImg = await getDownloadURL(ref(storage, bgImgSnap.ref.fullPath));
           } catch (err) {
             console.log(err);
           }
@@ -126,17 +127,17 @@ const EditModal = ({ image }) => {
            })
           
            console.log(data)
-          // updateDoc(doc(db, "users", auth.currentUser.uid), data).then(() => {
-          //   setUserProfile({
-          //     ...userProfile,
-          //     data
-          //   });
-          //   setProfile({
-          //     ...profile,
-          //     data,
-          //   });
-          //   setIsLoading(false);
-          // });
+          updateDoc(doc(db, "users", auth.currentUser.uid), data).then(() => {
+            setUserProfile({
+              ...userProfile,
+              data
+            });
+            setProfile({
+              ...profile,
+              data,
+            });
+            setIsLoading(false);
+          });
         } catch (err) {
           console.log(err);
         }
@@ -295,13 +296,13 @@ const EditModal = ({ image }) => {
         </div>
 
         <div className="absolute top-2 right-3">
-          <p
+          {isLoading ? <CircularProgress/> : <p
             onClick={isValid ? handleSave : ()=>{}}
             className={`bg-black text-white rounded-full py-1 px-2 ${!isValid && 'bg-gray-500'}`}
 
           >
             Save
-          </p>
+          </p>}
         </div>
       </div>
     </div>

@@ -52,7 +52,8 @@ const Profile = ({ image }) => {
 
   const handleFollow = ()=>{
 
-  }
+  };
+  console.log(profile)
   useEffect(() => {
     const id = userId === auth.currentUser.uid ? auth.currentUser.uid : userId;
     getDoc(doc(db, "users", id)).then((docsnap) => {
@@ -68,7 +69,7 @@ const Profile = ({ image }) => {
   if (profile) {
     return (
       <div>
-        <ProfilePic AVI={profile?.avatar}  />
+        <ProfilePic AVI={profile?.avatar}  bgImgURL = {profile?.bgImg}/>
         {userId === auth.currentUser.uid ? (
           <button
             className="mt-2 px-2 text-base  rounded-full border-black/70 border-[.125rem] float-right md:font-medium mr-3"
@@ -144,13 +145,13 @@ const Profile = ({ image }) => {
                 name="tweets"
               />
             </Link>
-            <Link to="with_replies" replace={true}>
+            {/* <Link to="with_replies" replace={true}>
               <TabTitle
                 text="Tweets & replies"
                 isActive={activeState?.with_replies}
                 name="tweetsNR"
               />
-            </Link>
+            </Link> */}
             <Link to="media" replace={true}>
               <TabTitle
                 text="Media"
