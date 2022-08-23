@@ -45,6 +45,14 @@ const Auth = ({ signUp }) => {
         name,
         createdAt: Timestamp.fromDate(new Date()),
         isOnline: true,
+        bio:'',
+        followers: [],
+        following: [],
+        isVerified: false,
+        avatar: '',
+        avatarPath: '',
+        bgImg: '',
+        bgImgPath: ''
       });
       console.log(done);
       setData(initialState);

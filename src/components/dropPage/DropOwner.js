@@ -11,7 +11,6 @@ const DropOwner = ({drop, likeDrop}) => {
 
   const {userProfile} = useStateAuth()
   const handleLike = ()=>{
-
     likeDrop({id:drop?.id, likeId:userProfile.uid})
   }
   return (

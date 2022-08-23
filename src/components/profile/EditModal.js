@@ -14,11 +14,11 @@ import { useStateAuth } from "../../context/Auth";
 const EditModal = ({ image }) => {
   const [pic, setPic] = useState(image ? image : "");
 
-  const { setUser, user, setUserProfile, userProfile, setEditModal } =
-    useStateAuth();
+  const { setUser, user, setUserProfile, userProfile, setEditModal } = useStateAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [isPhotoEdit, setIsPhotoEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isValid, setIsValid] = useState(true);
 
   // hold previous state where state gets cleared
   const [prevprofile, setPrevProfile] = useState({
@@ -29,12 +29,13 @@ const EditModal = ({ image }) => {
   const [profile, setProfile] = useState({
     name: userProfile?.name,
     bio: userProfile?.bio,
-    profileImg: userProfile?.avatar,
-    bgImg: '',
-    prevprofileImg: userProfile?.avatar,
-    prevbgImg: "",
+    avatar: userProfile?.avatar,
+    bgImg: userProfile?.bgImg,
+    prevavatar: userProfile?.avatar,
+    prevbgImg: userProfile?.bgImg,
   });
-  const { name, bio, prevprofileImg, prevbgImg } = profile;
+
+  const { name, bio, prevavatar, prevbgImg,avatar,bgImg } = profile;
 
   const handleChange = (e)=>{
         
@@ -48,7 +49,11 @@ const EditModal = ({ image }) => {
         })
 
     }
+    
     setProfile({...profile,[e.target.name]:e.target.value})
+    if(e.target.name === 'name' && e.target.value !== ''){
+      setIsValid(true)
+    }
 }
 
  
@@ -68,6 +73,86 @@ const EditModal = ({ image }) => {
       });
     });
   };
+
+  const handleSave = ()=>{
+    const id = auth?.currentUser?.uid
+
+      // CHECK FOR CHANGES IN THE FORM FIELD
+       const changes = {}
+        Object.keys(profile).forEach(item=>{
+          if ((profile[item] === userProfile[item]) ){
+            
+            changes[item] = profile[item]
+          }
+        })
+        console.log(changes)
+      const uploadPic = async () => {
+
+        const fileData =  {avatarSnap:null, avatarUrl:null, bgImgSnap:null, bgImgUrl: null}
+        if (changes.avatar){
+          const avatarRef = ref(
+            storage,
+            `avatar/${new Date().getTime()}-${pic.name}`
+          );
+
+          try {
+             fileData.avatarSnap = await uploadBytes(avatarRef, pic);
+             fileData.avatarUrl = await getDownloadURL(ref(storage, fileData.avatarSnap.ref.fullPath));
+          } catch (err) {
+            console.log(err);
+          }
+        }
+
+        if (changes.bgImg){
+          const bgImgRef = ref(
+            storage,
+            `bgImg/${new Date().getTime()}-${pic.name}`
+          );
+          try {
+            fileData.bgImgSnap = await uploadBytes(bgImgRef, pic);
+            fileData.bgImgUrl = await getDownloadURL(ref(storage, fileData.bgImgSnap.ref.fullPath));
+          } catch (err) {
+            console.log(err);
+          }
+        }
+
+        try {
+          const data = {};
+          Object.keys(changes).forEach(change=>{
+           if (change !== 'avatar' || change !== 'bgImg') data[change] = changes[change]
+          })
+          Object.keys(fileData).forEach(file=>{
+            if (fileData[file]) data[file] = fileData[file]
+           })
+          
+           console.log(data)
+          // updateDoc(doc(db, "users", auth.currentUser.uid), data).then(() => {
+          //   setUserProfile({
+          //     ...userProfile,
+          //     data
+          //   });
+          //   setProfile({
+          //     ...profile,
+          //     data,
+          //   });
+          //   setIsLoading(false);
+          // });
+        } catch (err) {
+          console.log(err);
+        }
+        // try {
+        //   if (userProfile.avatarPath) {
+        //     await deleteObject(ref(storage, userProfile.avatarPath));
+        //   }
+        // } catch (err) {
+        //   console.log(err);
+        // }
+      };
+
+      uploadPic();
+    
+    setPic("");
+  }
 
   const deletePhoto = async () => {
     try {
@@ -94,72 +179,78 @@ const EditModal = ({ image }) => {
     setIsEdit(false);
   };
 
-  //   useEffect(() => {
-  //     const id = auth?.currentUser?.uid
-  //     getDoc(doc(db, "users", id)).then((docsnap) => {
-  //       if (docsnap.exists) {
-  //         setProfile({ ...profile, ...docsnap.data() });
-  //         if ( auth.currentUser.uid)
-  //           setUserProfile({ ...userProfile, ...docsnap.data() });
-  //       }
-  //     });
-  //     if (pic) {
-  //       const uploadPic = async () => {
-  //         const imgRef = ref(
-  //           storage,
-  //           `avatar/${new Date().getTime()}-${pic.name}`
-  //         );
+  const clearBgImg = ()=>{
+    setProfile({...profile, prevbgImg: '', bgImg: ''})
+  }
 
-  //         try {
-  //           const snap = await uploadBytes(imgRef, pic);
-  //           const url = await getDownloadURL(ref(storage, snap.ref.fullPath));
+  // form validity checker
+  useEffect(()=>{
+    if (!name.trim()) {
+      setIsValid(false);
+    }
+  },[name]);
 
-  //           updateDoc(doc(db, "users", auth.currentUser.uid), {
-  //             avatar: url,
-  //             avatarPath: snap.ref.fullPath,
-  //           }).then(() => {
-  //             setUserProfile({
-  //               ...userProfile,
-  //               avatar: url,
-  //               avatarPath: snap.ref.fullPath,
-  //             });
-  //             setProfile({
-  //               ...profile,
-  //               avatar: url,
-  //               avatarPath: snap.ref.fullPath,
-  //             });
-  //             setIsLoading(false);
-  //           });
-  //         } catch (err) {
-  //           console.log(err);
-  //         }
-  //         try {
-  //           if (userProfile.avatarPath) {
-  //             await deleteObject(ref(storage, userProfile.avatarPath));
-  //           }
-  //         } catch (err) {
-  //           console.log(err);
-  //         }
-  //       };
+    useEffect(() => {
+      const id = auth?.currentUser?.uid
+      
+      if (pic) {
+        const uploadPic = async () => {
+          const imgRef = ref(
+            storage,
+            `avatar/${new Date().getTime()}-${pic.name}`
+          );
 
-  //       uploadPic();
-  //     }
-  //     setPic("");
-  //   }, [pic,]);
+          try {
+            const snap = await uploadBytes(imgRef, pic);
+            const url = await getDownloadURL(ref(storage, snap.ref.fullPath));
+
+            updateDoc(doc(db, "users", auth.currentUser.uid), {
+              avatar: url,
+              avatarPath: snap.ref.fullPath,
+            }).then(() => {
+              setUserProfile({
+                ...userProfile,
+                avatar: url,
+                avatarPath: snap.ref.fullPath,
+              });
+              setProfile({
+                ...profile,
+                avatar: url,
+                avatarPath: snap.ref.fullPath,
+              });
+              setIsLoading(false);
+            });
+          } catch (err) {
+            console.log(err);
+          }
+          try {
+            if (userProfile.avatarPath) {
+              await deleteObject(ref(storage, userProfile.avatarPath));
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        };
+
+        uploadPic();
+      }
+      setPic("");
+    }, [pic,]);
 
   return (
-    <div className="w-[15rem] sm:w-[25rem] md:w-[30rem] p-3">
+    <div className="w-[15rem] sm:w-[25rem] md:w-[30rem] p-3 bg-white ">
       <ProfilePic
-        setProfile
-        AVI={prevprofileImg}
+        setProfile 
+        AVI={prevavatar}
         bgImgURL = {prevbgImg}
         bgImgFor="input_bgImg"
         profileImgFor="input_profileImg"
+        clearBgImg={clearBgImg}
       />
       <input
         type="file"
         onChange={handleChange}
-        name="profileImg"
+        name="avatar"
         id="input_profileImg"
         className="hidden"
         accept="image/*"
@@ -183,6 +274,7 @@ const EditModal = ({ image }) => {
               value={name}
               onChange={handleChange}
             />
+            {!isValid && <p className="text-red-800">Name field cannot be empty</p>}
           </div>
           <div>
             <p className="font-semibold">Bio</p>
@@ -204,8 +296,9 @@ const EditModal = ({ image }) => {
 
         <div className="absolute top-2 right-3">
           <p
-            onClick={handleSaveText}
-            className=" bg-black text-white rounded-full py-1 px-2"
+            onClick={isValid ? handleSave : ()=>{}}
+            className={`bg-black text-white rounded-full py-1 px-2 ${!isValid && 'bg-gray-500'}`}
+
           >
             Save
           </p>

@@ -20,25 +20,17 @@ import { borderColor } from "@mui/system";
 import { DeleteForeverRounded, Edit } from "@mui/icons-material";
 import ProfilePic from "../components/profile/ProfilePic";
 import TabTitle from "../components/profile/TabTitle";
+import { UilEnvelope } from '@iconscout/react-unicons'
 
 const Profile = ({ image }) => {
-  const [pic, setPic] = useState(image ? image : "");
 
   const { userId } = useParams();
 
   const { setUser, user, setUserProfile, userProfile, setEditModal } =
     useStateAuth();
 
-  const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [profileHeight, setProfileHeight] = useState(0);
-  console.log(profileHeight);
 
-  // hold previous state where state gets cleared
-  const [prevprofile, setPrevProfile] = useState({
-    name: userProfile?.name,
-    bio: userProfile?.bio,
-  });
 
   const [profile, setProfile] = useState({
     name: userProfile?.name,
@@ -47,58 +39,20 @@ const Profile = ({ image }) => {
   });
   const { name, bio } = profile;
 
-  const handleChangePic = (e) => {
-    setPic(e.target.files[0]);
-    setIsLoading(true);
-  };
-
-  const handleChangeText = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
-  const handleSaveText = async (e) => {
-    if (!name?.trim()) return handleCancel();
-    updateDoc(doc(db, "users", auth.currentUser.uid), {
-      name,
-      bio,
-    }).then(() => {
-      getDoc(doc(db, "users", auth.currentUser.uid)).then((docsnap) => {
-        if (docsnap.exists) {
-          setUserProfile(docsnap.data());
-          setPrevProfile(profile);
-          setIsLoading(false);
-          setIsEdit(false);
-        }
-      });
-    });
-  };
-
-  const deletePhoto = async () => {
-    try {
-      const confirm = window.confirm("Delete Avatar?");
-      if (userProfile.avatarPath && confirm) {
-        await deleteObject(ref(storage, userProfile.avatarPath));
-        updateDoc(doc(db, "users", auth.currentUser.uid), {
-          avatar: "",
-          avatarPath: "",
-        }).then(() => {
-          setUserProfile({ ...userProfile, avatar: "", avatarPath: "" });
-          setIsLoading(false);
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const [activeState, setActiveState] = useState({ tweets: true });
 
-  const handleCancel = () => {
-    if (!name.trim()) {
-      setProfile({ prevprofile });
-    }
-    setIsEdit(false);
-  };
+  const isFollowing = ()=>{
+    const index = userProfile.following.findIndex(follow=> follow === userId);
 
+    if (index === -1){
+      return false
+    }
+    return true
+  }
+
+  const handleFollow = ()=>{
+
+  }
   useEffect(() => {
     const id = userId === auth.currentUser.uid ? auth.currentUser.uid : userId;
     getDoc(doc(db, "users", id)).then((docsnap) => {
@@ -108,61 +62,37 @@ const Profile = ({ image }) => {
           setUserProfile({ ...userProfile, ...docsnap.data() });
       }
     });
-    if (pic) {
-      const uploadPic = async () => {
-        const imgRef = ref(
-          storage,
-          `avatar/${new Date().getTime()}-${pic.name}`
-        );
-
-        try {
-          const snap = await uploadBytes(imgRef, pic);
-          const url = await getDownloadURL(ref(storage, snap.ref.fullPath));
-
-          updateDoc(doc(db, "users", auth.currentUser.uid), {
-            avatar: url,
-            avatarPath: snap.ref.fullPath,
-          }).then(() => {
-            setUserProfile({
-              ...userProfile,
-              avatar: url,
-              avatarPath: snap.ref.fullPath,
-            });
-            setProfile({
-              ...profile,
-              avatar: url,
-              avatarPath: snap.ref.fullPath,
-            });
-            setIsLoading(false);
-          });
-        } catch (err) {
-          console.log(err);
-        }
-        try {
-          if (userProfile.avatarPath) {
-            await deleteObject(ref(storage, userProfile.avatarPath));
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-      uploadPic();
-    }
-    setPic("");
-  }, [pic, userId]);
+    
+  }, [ userId]);
 
   if (profile) {
     return (
       <div>
-        <ProfilePic AVI={profile?.avatar} setProfileHeight={setProfileHeight} />
-        {userId === auth.currentUser.uid && (
+        <ProfilePic AVI={profile?.avatar}  />
+        {userId === auth.currentUser.uid ? (
           <button
-            className="mt-2 px-4  rounded-full border-black/70 border-[.125rem] float-right md:font-medium mr-3"
-            onClick={() => setEditModal(true)}
+            className="mt-2 px-2 text-base  rounded-full border-black/70 border-[.125rem] float-right md:font-medium mr-3"
+            onClick={() => {setEditModal(true)}}
           >
             Edit Profile
           </button>
+        ) : (
+          <span className="float-right mt-2 flex items-center gap-2">
+            <button><UilEnvelope/></button>
+            {isFollowing ? (<button
+              className=" px-2 text-base bg-black text-white rounded-full  border-[.125rem] mr-3"
+              onClick={() => {}}
+            >
+              Follow
+            </button>):(
+              <button
+              className=" px-2 text-base  bg-gray text-white rounded-full  border-[.125rem] mr-3"
+              onClick={() => {}}
+            >
+              Unfollow
+            </button>
+            )}
+          </span>
         )}
 
         <div className="flex justify-start w-full mt-[10%]">

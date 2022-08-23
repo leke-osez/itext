@@ -28,12 +28,14 @@ import { useParams } from 'react-router-dom';
 
 
 const DropPage = ({dropPage}) => {
-  const {activeDrop, userProfile, drops, setDrops} = useStateAuth();
+  const { userProfile, drops, setDrops} = useStateAuth();
   const [dropText, setDropText] = useState('');
-  const [comments, setComments] = useState(null)
+  const [comments, setComments] = useState(null);
+  const [loading, setLoading] = useState(false)
   const params = useParams()
 
   const dropId = params.id;
+  const activeDrop = drops.find(drop=> drop.id === dropId)
 
   const handleChangeText = e=>{
     setDropText(e.target.value)
@@ -43,6 +45,8 @@ const DropPage = ({dropPage}) => {
   const handleSubmit = async(e)=>{
     e.preventDefault();
     if(!dropText.trim()) return;
+
+    setLoading(true)
     const commentData = {
       commentText:dropText,
       author: userProfile?.uid,
@@ -51,12 +55,14 @@ const DropPage = ({dropPage}) => {
     }
     try {
       const batch = writeBatch(db)
-          batch.set(collection(db, 'comments', activeDrop.id, 'comment'),commentData)
+          addDoc(collection(db, 'comments', activeDrop.id, 'comment'),commentData)
           batch.update(doc(db, "drop", activeDrop.id ),{comments: increment(1)});
           await batch.commit();
       
       setComments([{...commentData, avatar:userProfile?.avatar, name: userProfile?.name},...comments])
       setDropText('')
+      setLoading(false)
+
     } catch (error) {
       console.log(error)
     }
@@ -89,11 +95,45 @@ const DropPage = ({dropPage}) => {
         }
         return dropItem
       }))
+
     } catch (error) {
       console.log(error)
     }
   }
 
+  const likeComment = async(comment)=>{
+    const commentLikes = ()=>{
+      const commentIndex = comments.findIndex(commentItem=>commentItem.id === comment.id)
+      
+
+      const commentItem = comments[commentIndex]
+      const isLiked = commentItem.likes.findIndex(like => like === comment.likeId)
+       // NOT LIKED
+       if (isLiked === -1){
+        return [comment.likeId,...commentItem.likes]
+      }
+      return commentItem.likes.filter(like=> like !== comment.likeId)
+    }
+
+    // DATABASE UPDATE
+    try {
+      const docRef = doc(db, "comments", activeDrop.id,'comment', comment.id )
+      await updateDoc(docRef, {
+        likes: commentLikes()
+    });
+
+    // UI UPDATE
+      setComments(comments.map((commentItem)=>{
+        if (commentItem.id === comment?.id){
+          return{...commentItem, likes: commentLikes()}
+        }
+        return commentItem
+      }))
+
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   useEffect(() => {
 
@@ -123,8 +163,8 @@ const DropPage = ({dropPage}) => {
   return (
     <div className='p-3'>
         <DropOwner drop={activeDrop} likeDrop = {likeDrop}/>
-        <CommentBox user = {userProfile} onChangeText = {handleChangeText} dropText = {dropText} handleSubmit = {handleSubmit}/>
-        {comments && <CommentList comments = {comments}/>}
+        <CommentBox user = {userProfile} onChangeText = {handleChangeText} dropText = {dropText} handleSubmit = {handleSubmit} loading = {loading}/>
+        {comments && <CommentList comments = {comments} likeComment = {likeComment}/>}
     </div>
   )
 }

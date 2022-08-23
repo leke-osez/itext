@@ -22,9 +22,20 @@ const Drop = ({ drop, likeDrop }) => {
     setActiveDrop(drop);
 
   }
-  
-  const handleLike = ()=>{
+  const isLiked = ()=>{
+    const index = drop.likes.findIndex(like=> like === userProfile.uid);
 
+    if (index === -1){
+      return false
+    }
+    return true
+  }
+
+  const selectProfile = ()=>{
+    navigate(`/profile/${drop.authorId}`)
+  }
+
+  const handleLike = ()=>{
     likeDrop({id:drop?.id, likeId:userProfile.uid})
   }
   return (
@@ -40,11 +51,11 @@ const Drop = ({ drop, likeDrop }) => {
         {/* DROP META */}
         <div className="flex items-end mb-1">
           {/* AUTHOR NAME */}
-          <div className=" border-r-[.2px] px-1 text-sm">
-            <p className=" text-black/90 font-medium    ">
+          <div className=" flex gap-[.12rem] border-r-[.2px] px-1 text-sm" onClick={selectProfile}>
+            <p className=" text-black/90 font-medium hover:underline cursor-pointer ">
               {drop?.username}
             </p>
-            <p className=" text-black/60 font-medium">
+            <p className=" text-black/60 font-medium hover:underline cursor-pointer">
               @{drop?.authorName || "hammerhead"}
             </p>
           </div>
@@ -114,8 +125,8 @@ const Drop = ({ drop, likeDrop }) => {
           
           {/* DROP ACTIONS */}
           <div className="border-t-[.1px] flex justify-center gap-10 font-thin w-full">
-              <DropAction DropIcon={UilHeartAlt} text = {drop?.likes.length} handleClick = {handleLike}/>
-              <DropAction DropIcon={UilComment} text ={drop?.comments} handleClick = {handleComment}/>
+              <DropAction DropIcon={UilHeartAlt} text = {drop?.likes.length} handleClick = {handleLike} isLiked = {isLiked()}/>
+              <DropAction DropIcon={UilComment} text ={drop?.comments} handleClick = {handleComment} />
           </div>
         </div>
       </div>

@@ -2,10 +2,15 @@ import React from "react";
 import AvatarContainer from "../avatarContainer/AvatarContainer";
 import { UilHeartAlt } from "@iconscout/react-unicons";
 import DropAction from "../drops/DropAction";
-import Moment from 'react-moment'
+import Moment from 'react-moment';
+import { useStateAuth } from "../../context/Auth";
 
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, likeComment }) => {
+  const {userProfile} = useStateAuth()
+  const handleLike = ()=>{
+    likeComment({id:comment.id, likeId: userProfile.uid})
+  }
   return (
     <div className="flex items-start mb-5 w-full">
       <div className="flex items-start mb-5 w-full">
@@ -42,7 +47,7 @@ const Comment = ({ comment }) => {
 
             {/* comment ACTIONS */}
             <div className="border-[.1px] rounded-b-lg flex justify-center gap-10 font-thin w-full max-w-[600px] py-2">
-              <DropAction DropIcon={UilHeartAlt} text={comment?.likes.length} />
+              <DropAction DropIcon={UilHeartAlt} text={comment?.likes.length} handleClick = {handleLike}/>
               {/* <DropAction DropIcon={UilComment} text ={comment?.comments.length}/> */}
             </div>
           </div>
