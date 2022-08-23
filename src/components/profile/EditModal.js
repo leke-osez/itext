@@ -11,12 +11,11 @@ import {
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { useStateAuth } from "../../context/Auth";
 
-const EditModal = ({ image }) => {
+const EditModal = ({ image,  }) => {
   const [pic, setPic] = useState(image ? image : "");
 
-  const { setUser, user, setUserProfile, userProfile, setEditModal } = useStateAuth();
+  const {  setUserProfile, userProfile, setProfile:sendProfile, setEditModal } = useStateAuth();
   const [isEdit, setIsEdit] = useState(false);
-  const [isPhotoEdit, setIsPhotoEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(true);
 
@@ -57,25 +56,7 @@ const EditModal = ({ image }) => {
 }
 
  
-  const handleSaveText = async (e) => {
-    if (!name?.trim()) return handleCancel();
-    updateDoc(doc(db, "users", auth.currentUser.uid), {
-      name,
-      bio,
-    }).then(() => {
-      getDoc(doc(db, "users", auth.currentUser.uid)).then((docsnap) => {
-        if (docsnap.exists) {
-          setUserProfile(docsnap.data());
-          setPrevProfile(profile);
-          setIsLoading(false);
-          setIsEdit(false);
-        }
-      });
-    });
-  };
-
   const handleSave = ()=>{
-    const id = auth?.currentUser?.uid
       setIsLoading(true)
       // CHECK FOR CHANGES IN THE FORM FIELD
        const changes = {}
@@ -95,7 +76,7 @@ const EditModal = ({ image }) => {
           );
 
           try {
-             const avatarSnap = await uploadBytes(avatarRef, pic);
+             const avatarSnap = await uploadBytes(avatarRef, changes.avatar);
              fileData.avatarPath = avatarSnap.ref.fullPath
              fileData.avatar = await getDownloadURL(ref(storage, avatarSnap.ref.fullPath));
           } catch (err) {
@@ -106,10 +87,10 @@ const EditModal = ({ image }) => {
         if (changes.bgImg){
           const bgImgRef = ref(
             storage,
-            `bgImg/${new Date().getTime()}-${changes.avatar.name}`
+            `bgImg/${new Date().getTime()}-${changes.bgImg.name}`
           );
           try {
-            const bgImgSnap = await uploadBytes(bgImgRef, pic);
+            const bgImgSnap = await uploadBytes(bgImgRef, changes.bgImg);
             fileData.bgImgPath = bgImgSnap.ref.fullPath
             fileData.bgImg = await getDownloadURL(ref(storage, bgImgSnap.ref.fullPath));
           } catch (err) {
@@ -126,17 +107,17 @@ const EditModal = ({ image }) => {
             if (fileData[file]) data[file] = fileData[file]
            })
           
-           console.log(data)
           updateDoc(doc(db, "users", auth.currentUser.uid), data).then(() => {
             setUserProfile({
               ...userProfile,
-              data
+              ...data
             });
-            setProfile({
+            sendProfile({
               ...profile,
-              data,
+              ...data,
             });
             setIsLoading(false);
+            setEditModal(false)
           });
         } catch (err) {
           console.log(err);
@@ -166,6 +147,7 @@ const EditModal = ({ image }) => {
         }).then(() => {
           setUserProfile({ ...userProfile, avatar: "", avatarPath: "" });
           setIsLoading(false);
+
         });
       }
     } catch (err) {

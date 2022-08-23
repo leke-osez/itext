@@ -14,6 +14,10 @@ export const AuthProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [appUsers, setAppUsers] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState({
+    name: userProfile?.name,
+    bio: userProfile?.bio,
+  });
 
   // CHAT STATES
   const [chat, setChat ]= useState(null);
@@ -51,7 +55,8 @@ export const AuthProvider = ({ children }) => {
     activeDrop, setActiveDrop,
     userRecommendations, setUserRecommendations,
     commentModal, setCommentModal,
-    editModal, setEditModal
+    editModal, setEditModal,
+    profile, setProfile
   };
 
   useEffect(() => {

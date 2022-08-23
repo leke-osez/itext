@@ -5,19 +5,11 @@ import {
   getDownloadURL,
   uploadBytes,
   deleteObject,
+
 } from "firebase/storage";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import {
-  Avatar,
-  CircularProgress,
-  TextareaAutosize,
-  TextField,
-} from "@mui/material";
+import { getDoc, doc, updateDoc , setDoc, writeBatch} from "firebase/firestore";
 import { Link, Outlet, useParams } from "react-router-dom";
 import { useStateAuth } from "../context/Auth";
-import { borderColor } from "@mui/system";
-import { DeleteForeverRounded, Edit } from "@mui/icons-material";
 import ProfilePic from "../components/profile/ProfilePic";
 import TabTitle from "../components/profile/TabTitle";
 import { UilEnvelope } from '@iconscout/react-unicons'
@@ -26,18 +18,7 @@ const Profile = ({ image }) => {
 
   const { userId } = useParams();
 
-  const { setUser, user, setUserProfile, userProfile, setEditModal } =
-    useStateAuth();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-
-  const [profile, setProfile] = useState({
-    name: userProfile?.name,
-    bio: userProfile?.bio,
-    prevPic: image ? image : "",
-  });
-  const { name, bio } = profile;
+  const { setUser, user, setUserProfile, userProfile, setEditModal, profile, setProfile  } = useStateAuth();
 
   const [activeState, setActiveState] = useState({ tweets: true });
 
@@ -50,10 +31,51 @@ const Profile = ({ image }) => {
     return true
   }
 
-  const handleFollow = ()=>{
+  const handleFollow = async(id)=>{
+    const batch = writeBatch(db) 
+    const userId = userProfile.uid;
+
+    const userToFollowRef = doc(db, 'users', id);
+    const userRef = doc(db, 'users', userId);
+
+    const userToFollow = profile;
+    const userToFollowFollowers = userToFollow.followers
+
+    const following = userProfile.following;
+
+    const userIndex = following.findIndex(follow=>follow === id);
+    const userToFollowFollowersIndex = userToFollowFollowers.findIndex(follow=>follow === userId);
+
+
+    if (userIndex === -1){
+      following.push(id);
+      userToFollowFollowers.push(userId);
+
+      batch.update(userRef,{
+        following
+      });
+      batch.update(userToFollowRef,{
+        followers: userToFollowFollowers 
+      });
+
+    } else{
+      following.splice(userIndex,1);
+      userToFollowFollowers.splice(userToFollowFollowersIndex, 1)
+
+      batch.update(userRef,{
+        following
+      });
+      batch.update(userToFollowRef,{
+        followers: userToFollowFollowers 
+      });
+    }
+
+    await batch.commit();
+    setProfile({...profile, followers:userToFollowFollowers})
 
   };
   console.log(profile)
+
   useEffect(() => {
     const id = userId === auth.currentUser.uid ? auth.currentUser.uid : userId;
     getDoc(doc(db, "users", id)).then((docsnap) => {
@@ -72,7 +94,7 @@ const Profile = ({ image }) => {
         <ProfilePic AVI={profile?.avatar}  bgImgURL = {profile?.bgImg}/>
         {userId === auth.currentUser.uid ? (
           <button
-            className="mt-2 px-2 text-base  rounded-full border-black/70 border-[.125rem] float-right md:font-medium mr-3"
+            className="mt-2 px-2 text-base  rounded-full border-black/70 border-[.05rem] float-right md:font-medium mr-3"
             onClick={() => {setEditModal(true)}}
           >
             Edit Profile
@@ -80,15 +102,15 @@ const Profile = ({ image }) => {
         ) : (
           <span className="float-right mt-2 flex items-center gap-2">
             <button><UilEnvelope/></button>
-            {isFollowing ? (<button
-              className=" px-2 text-base bg-black text-white rounded-full  border-[.125rem] mr-3"
-              onClick={() => {}}
+            {!isFollowing() ? (<button
+              className=" px-2 text-base bg-black text-white rounded-full  border-[.05rem] mr-3"
+              onClick={()=>handleFollow(profile.uid)}
             >
               Follow
             </button>):(
               <button
-              className=" px-2 text-base  bg-gray text-white rounded-full  border-[.125rem] mr-3"
-              onClick={() => {}}
+              className=" px-2 text-base  bg-gray-400 text-white rounded-full  border-[.05rem] mr-3"
+              onClick={()=>handleFollow(profile.uid)}
             >
               Unfollow
             </button>

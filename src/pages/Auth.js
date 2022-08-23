@@ -85,7 +85,6 @@ const Auth = ({ signUp }) => {
   // destructuring object -- data
   const { name, email, password, error, loading } = data;
 
-  console.log(location);
   return (
     <div
       className={`w-full md:h-screen flex flex-col-reverse md:flex-row justify-center items-center ${
