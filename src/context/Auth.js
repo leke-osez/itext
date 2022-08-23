@@ -18,6 +18,8 @@ export const AuthProvider = ({ children }) => {
     name: userProfile?.name,
     bio: userProfile?.bio,
   });
+  const [profileContents,setProfileContents] = useState(null)
+
 
   // CHAT STATES
   const [chat, setChat ]= useState(null);
@@ -56,7 +58,8 @@ export const AuthProvider = ({ children }) => {
     userRecommendations, setUserRecommendations,
     commentModal, setCommentModal,
     editModal, setEditModal,
-    profile, setProfile
+    profile, setProfile,
+    profileContents, setProfileContents
   };
 
   useEffect(() => {

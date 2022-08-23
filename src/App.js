@@ -14,6 +14,7 @@ import Layout from "./components/Layout";
 import { useState } from "react";
 import Drops from "./pages/Drops";
 import DropPage from "./pages/DropPage";
+import ProfileContents from "./components/profile/ProfileContents";
 
 function App() {
   const [isMenu, setIsMenu] = useState(false);
@@ -60,7 +61,19 @@ function App() {
                       <Profile />
                     </PrivateRoute>
                   }
+                >
+                  <Route
+                  exact
+                  path=':location'
+                  element={
+                    <PrivateRoute>
+                      <ProfileContents />
+                    </PrivateRoute>
+                  }
                 />
+                
+                
+                </Route>
                 <Route
                   exact
                   path="/chat/:messageid"

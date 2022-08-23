@@ -18,7 +18,7 @@ const Layout = () => {
   // EXTRACT WINDOW LOCATION FROM PATH;
   const locationExtractor = (path) => {
     var rx = /\/(.*)\//g;
-    var arr = rx.exec(path);
+    var arr = path.match(rx);
     if (arr) {
       return arr[1];
     } else {

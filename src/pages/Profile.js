@@ -16,14 +16,13 @@ import { UilEnvelope } from '@iconscout/react-unicons'
 
 const Profile = ({ image }) => {
 
-  const { userId } = useParams();
+  const { userId,location } = useParams();
+  const { setUser, user, setUserProfile, userProfile, setEditModal, profile, setProfile, setProfileContents  } = useStateAuth();
 
-  const { setUser, user, setUserProfile, userProfile, setEditModal, profile, setProfile  } = useStateAuth();
-
-  const [activeState, setActiveState] = useState({ tweets: true });
+  const [activeState, setActiveState] = useState(null);
 
   const isFollowing = ()=>{
-    const index = userProfile.following.findIndex(follow=> follow === userId);
+    const index = userProfile?.following?.findIndex(follow=> follow === userId);
 
     if (index === -1){
       return false
@@ -46,7 +45,6 @@ const Profile = ({ image }) => {
     const userIndex = following.findIndex(follow=>follow === id);
     const userToFollowFollowersIndex = userToFollowFollowers.findIndex(follow=>follow === userId);
 
-
     if (userIndex === -1){
       following.push(id);
       userToFollowFollowers.push(userId);
@@ -59,6 +57,7 @@ const Profile = ({ image }) => {
       });
 
     } else{
+      
       following.splice(userIndex,1);
       userToFollowFollowers.splice(userToFollowFollowersIndex, 1)
 
@@ -74,7 +73,6 @@ const Profile = ({ image }) => {
     setProfile({...profile, followers:userToFollowFollowers})
 
   };
-  console.log(profile)
 
   useEffect(() => {
     const id = userId === auth.currentUser.uid ? auth.currentUser.uid : userId;
@@ -87,6 +85,11 @@ const Profile = ({ image }) => {
     });
     
   }, [ userId]);
+
+  useEffect(()=>{
+    setActiveState({[location]:true})
+    setProfileContents(location ? location : 'drops')
+},[location, setProfileContents])
 
   if (profile) {
     return (
@@ -160,18 +163,18 @@ const Profile = ({ image }) => {
         </div>
         <div className="profilePage__body">
           <div className="profilePage__pageTitle flex justify-around">
-            <Link to={`tweets`} replace={true}>
+            <Link to={``} replace={true}>
               <TabTitle
-                text="Tweets"
-                isActive={activeState?.tweets}
-                name="tweets"
+                text="Drops"
+                isActive={!location}
+                name="drops"
               />
             </Link>
             {/* <Link to="with_replies" replace={true}>
               <TabTitle
-                text="Tweets & replies"
+                text="drops & replies"
                 isActive={activeState?.with_replies}
-                name="tweetsNR"
+                name="dropsNR"
               />
             </Link> */}
             <Link to="media" replace={true}>
