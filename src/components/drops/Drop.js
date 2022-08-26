@@ -23,7 +23,7 @@ const Drop = ({ drop, likeDrop }) => {
 
   }
   const isLiked = ()=>{
-    const index = drop.likes.findIndex(like=> like === userProfile.uid);
+    const index = drop?.likes.findIndex(like=> like === userProfile?.uid);
 
     if (index === -1){
       return false
@@ -32,12 +32,13 @@ const Drop = ({ drop, likeDrop }) => {
   }
 
   const selectProfile = ()=>{
-    navigate(`/profile/${drop.authorId}`)
+    navigate(`/profile/${drop?.authorId}`)
   }
 
   const handleLike = ()=>{
-    likeDrop({id:drop?.id, likeId:userProfile.uid})
+    likeDrop({id:drop?.id, likeId:userProfile?.uid})
   }
+
   return (
     <div className="flex items-start mb-5">
       {/* DROP AVATAR */}
@@ -51,13 +52,13 @@ const Drop = ({ drop, likeDrop }) => {
         {/* DROP META */}
         <div className="flex items-end mb-1">
           {/* AUTHOR NAME */}
-          <div className=" flex gap-[.12rem] border-r-[.2px] px-1 text-sm" onClick={selectProfile}>
+          <div className=" flex gap-[.12rem] border-r-[.2px] text-sm" onClick={selectProfile}>
             <p className=" text-black/90 font-medium hover:underline cursor-pointer ">
-              {drop?.username}
+              {drop?.name}
             </p>
-            <p className=" text-black/60 font-medium hover:underline cursor-pointer">
+            {/* <p className=" text-black/60 font-medium hover:underline cursor-pointer">
               @{drop?.authorName || "hammerhead"}
-            </p>
+            </p> */}
           </div>
 
           {/* DROP TIMESTAMP */}
@@ -65,7 +66,7 @@ const Drop = ({ drop, likeDrop }) => {
           <p className=" text-black/60 ml-3 text-sm"><Moment fromNow >{drop?.createdAt.toDate()}</Moment></p>
         </div>
 
-        <div className={`flex flex-col w-full cursor-pointer hover:bg-slate-400/20 ${drop?.dropFilePath.length && 'border-[.2px] rounded-lg'}`} onClick = {openDrop}>
+        <div className={`flex flex-col w-full cursor-pointer hover:bg-slate-400/20 ml-2 ${drop?.dropFilePath?.length && 'border-[.2px] rounded-lg'}`} onClick = {openDrop}>
           
           {/* TEXT */}
           <p className="w-full max-w-[600px] text-base text-black font-medium  mb-4">
@@ -73,7 +74,7 @@ const Drop = ({ drop, likeDrop }) => {
           </p>
 
           {/* FILE */}
-          <div className={` min-w-[200px] max-w-[600px]  ${drop?.dropFilePath.length && 'grid grid-cols-2 grid-rows-2 gap-1 aspect-[5/3]'}`}>
+          <div className={` min-w-[200px] max-w-[600px]  ${drop?.dropFilePath?.length && 'grid grid-cols-2 grid-rows-2 gap-1 aspect-[5/3]'}`}>
             {drop?.dropFilePath && (
               drop?.dropFilePath.map((filepath, i) => {
                 const fileLength = drop?.dropFilePath.length

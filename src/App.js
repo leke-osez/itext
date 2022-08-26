@@ -15,6 +15,7 @@ import { useState } from "react";
 import Drops from "./pages/Drops";
 import DropPage from "./pages/DropPage";
 import ProfileContents from "./components/profile/ProfileContents";
+import ProfileContentsHome from "./components/profile/profileContentHome";
 
 function App() {
   const [isMenu, setIsMenu] = useState(false);
@@ -38,13 +39,23 @@ function App() {
                 {/* MESSAGES ROUTE */}
                 <Route
                   exact
-                  path="/chat"
+                  path="/chat/"
                   element={
                     <PrivateRoute>
                       <Messages />
                     </PrivateRoute>
                   }
-                />
+                >
+                  {/* <Route
+                  exact
+                  path=":messageid"
+                  element={
+                    <PrivateRoute>
+                      <Chat />
+                    </PrivateRoute>
+                  }
+                /> */}
+                </Route>
                 <Route
                   exact
                   path="/"
@@ -62,6 +73,7 @@ function App() {
                     </PrivateRoute>
                   }
                 >
+                  
                   <Route
                   exact
                   path=':location'
@@ -74,15 +86,7 @@ function App() {
                 
                 
                 </Route>
-                <Route
-                  exact
-                  path="/chat/:messageid"
-                  element={
-                    <PrivateRoute>
-                      <Chat />
-                    </PrivateRoute>
-                  }
-                />
+                
                 <Route
                   exact
                   path="/drops"

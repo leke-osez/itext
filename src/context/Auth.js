@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     name: userProfile?.name,
     bio: userProfile?.bio,
   });
-  const [profileContents,setProfileContents] = useState(null)
+  const [profileContents,setProfileContents] = useState({drops:null, likes: null, media:null})
 
 
   // CHAT STATES
@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }) => {
     profileContents, setProfileContents
   };
 
+  // HANDLE AUTHENTICATION
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setUser(user);
@@ -69,6 +70,7 @@ export const AuthProvider = ({ children }) => {
     });
   }, []);
 
+  // HANDLE USER PROFILE
   useEffect(() => {
     if(!userProfile && auth?.currentUser?.uid){getDoc(doc(db, "users",auth.currentUser.uid )).then((docsnap) => {
       if (docsnap.exists()) {
@@ -93,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     const getRecommendations = async()=>{
     try{
         const recommendations = []
-        const q = query(collection(db, 'users'), where("uid", "!=", `${auth?.currentUser?.uid}` ), limit(10))
+        const q = query(collection(db, 'users'), where("uid", "!=", `${auth?.currentUser?.uid}`), limit(10))
         const userRec = await getDocs(q)
 
         userRec.forEach(user=>{
@@ -118,7 +120,10 @@ export const AuthProvider = ({ children }) => {
         try {
           updateDoc(doc(db, "users", auth.currentUser.uid), {
             isOnline: false,
-          })
+          });
+          setAppUsers(null);
+          setProfile(null);
+          setAcctMenu(null)
           
         } catch (err) {
           console.log(err);

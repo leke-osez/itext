@@ -12,8 +12,7 @@ const Recommended = () => {
   const setFollowButton = (id)=>{
     return ()=>{
       const arr = userRecommendations.filter(user=> user.uid !== id);
-      setUserRecommendations(userRecommendations.filter(user=> user.uid !== id))
-      console.log(id)
+      setUserRecommendations(arr)
     }
   }
   return (
@@ -32,7 +31,7 @@ const Recommended = () => {
             follow
           </button>
         </div>
-        ))): <p className="text-base text-black/60">No more Recommendations</p>}
+        ))): <p className="text-base text-black/x">No more Recommendations</p>}
         {/* recommendation card */}
         
 

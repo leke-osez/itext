@@ -33,9 +33,9 @@ const User = ({ profile, selectedUser, isUserList, user1 }) => {
       <Avatar src={avatar} className="usersAvatar" />
       <div className="flex flex-col w-full">
         <div className="flex items-center gap-3">
-          <p className="md:text-xl text-lg">{name}</p>
+          <p className="md:text-[1rem] text-base">{name}</p>
           {isOnline && (
-            <div className="h-2 aspect-square rounded-full bg-green-500 p-0"></div>
+            <div className="h-[.4rem] aspect-square rounded-full bg-green-500 p-0"></div>
           )}
         </div>
         {data && (

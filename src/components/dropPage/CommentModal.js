@@ -64,7 +64,7 @@ const CommentModal = () => {
   return (
     <div className='p-3'>
         <DropOwner drop={activeDrop} />
-        <CommentBox user = {userProfile} onChangeText = {handleChangeText} dropText = {dropText} handleSubmit = {handleSubmit} loading = {loading}/>
+        <CommentBox user = {userProfile} dropOwner={activeDrop} onChangeText = {handleChangeText} dropText = {dropText} handleSubmit = {handleSubmit} loading = {loading}/>
         
     </div>
   )

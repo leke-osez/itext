@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CommentBox from '../components/dropPage/CommentBox';
 import CommentList from '../components/dropPage/CommentList';
 import DropOwner from '../components/dropPage/DropOwner';
@@ -32,11 +32,12 @@ const DropPage = ({dropPage}) => {
   const [dropText, setDropText] = useState('');
   const [comments, setComments] = useState(null);
   const [loading, setLoading] = useState(false)
-  const params = useParams()
+  const params = useParams();
+  const [reDrop, setReDrop] = useState(null);
+  const countRef = useRef(0)
 
   const dropId = params.id;
-  const activeDrop = drops.find(drop=> drop.id === dropId)
-
+  const activeDrop =drops.length ? drops.find(drop=> drop.id === dropId) : reDrop
   const handleChangeText = e=>{
     setDropText(e.target.value)
   }
@@ -71,8 +72,7 @@ const DropPage = ({dropPage}) => {
 
   const likeDrop  = async(drop)=>{
     const dropLikes = ()=>{
-      const dropIndex = drops.findIndex(dropItem=>dropItem.id === drop.id)
-      const dropItem = drops[dropIndex]
+      const dropItem = activeDrop
       const isLiked = dropItem.likes.findIndex(like => like === drop.likeId)
        // NOT LIKED
        if (isLiked === -1){
@@ -103,11 +103,12 @@ const DropPage = ({dropPage}) => {
 
   const likeComment = async(comment)=>{
     const commentLikes = ()=>{
-      const commentIndex = comments.findIndex(commentItem=>commentItem.id === comment.id)
+      console.log(comment)
+      const commentIndex = comments?.findIndex(commentItem=>commentItem.id === comment.id)
       
-
       const commentItem = comments[commentIndex]
-      const isLiked = commentItem.likes.findIndex(like => like === comment.likeId)
+
+      const isLiked = commentItem?.likes?.findIndex(like => like === comment.likeId)
        // NOT LIKED
        if (isLiked === -1){
         return [comment.likeId,...commentItem.likes]
@@ -115,6 +116,7 @@ const DropPage = ({dropPage}) => {
       return commentItem.likes.filter(like=> like !== comment.likeId)
     }
 
+    console.log(activeDrop.id); console.log(comment.id)
     // DATABASE UPDATE
     try {
       const docRef = doc(db, "comments", activeDrop.id,'comment', comment.id )
@@ -136,19 +138,48 @@ const DropPage = ({dropPage}) => {
   };
 
   useEffect(() => {
-
-    const msgsRef = collection(db, 'comments', dropId, 'comment');
+    
+    const commentsRef = collection(db, 'comments', dropId, 'comment');
     const getComments = async () => {
-        try {
-          const commentList = []
 
-          const q = query(msgsRef,orderBy('createdAt', 'desc'))
-          const docs = await getDocs(q);
-          docs.forEach((doc) => {
-              commentList.push({...doc.data(),id:doc.id})
-              console.log(doc.data().authorDetails)
-          });
-          setComments(commentList)
+      // GET DROP IF RELOADED
+      if (!drops.length){
+        try{
+          const drop = await getDoc(doc(db, 'drop', dropId))
+          const dropData = drop.data()
+          const dropUser = await getDoc(doc(db, 'users', dropData.authorId))
+          const dropUserData = dropUser.data()
+          setReDrop({id:drop.id, ...dropData, name:dropUserData.name, username: dropUser.name, avatar: dropUser.avatar})
+        }catch(error){
+          console.log(error)
+        }
+      }
+
+        try {
+          const commentList = {};
+            
+          const q = query(commentsRef,orderBy('createdAt','desc'), limit(20))
+        const docs = await getDocs(q);
+          docs.forEach(async(document) => {
+            const data = document.data();
+            commentList[document.id] = {...data,id:document.id};
+            const authorRef = doc(db, "users", data.author)
+            console.log(document.id)
+            getDoc(authorRef).then((userDoc)=>{
+                const authorData = userDoc.data()
+                
+                commentList[document.id].name = authorData.name;
+                commentList[document.id].avatar = authorData.avatar;
+                console.log(authorData.uid)
+                countRef.current = countRef.current + 1
+                if (countRef.current === commentsArray.length){
+                  setComments(commentsArray)
+                }
+            })
+    
+        });
+        console.log('out')
+        var commentsArray = Object.values(commentList) 
 
         } catch (error) {
           console.log(error);
@@ -156,14 +187,18 @@ const DropPage = ({dropPage}) => {
 
       };
   
-      return () => {
+      
       getComments()
-    };
+  
   }, []);
+
+  useEffect(()=>{
+
+  })
   return (
     <div className='p-3'>
         <DropOwner drop={activeDrop} likeDrop = {likeDrop}/>
-        <CommentBox user = {userProfile} onChangeText = {handleChangeText} dropText = {dropText} handleSubmit = {handleSubmit} loading = {loading}/>
+        <CommentBox user = {userProfile} dropOwner = {activeDrop} onChangeText = {handleChangeText} dropText = {dropText} handleSubmit = {handleSubmit} loading = {loading}/>
         {comments && <CommentList comments = {comments} likeComment = {likeComment}/>}
     </div>
   )

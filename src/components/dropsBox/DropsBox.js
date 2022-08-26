@@ -1,4 +1,4 @@
-import { TextareaAutosize } from "@mui/material";
+import { CircularProgress, TextareaAutosize } from "@mui/material";
 import React, { useState } from "react";
 import AvatarContainer from "../avatarContainer/AvatarContainer";
 import { UilImages } from "@iconscout/react-unicons";
@@ -30,6 +30,7 @@ import { async } from "@firebase/util";
 const DropsBox = () => {
   const [dropData, setDropData] = useState({ dropText: "", files: null });
   const [errorInput, setErrorInput] = useState({ fileLength: "" });
+  const [isLoading, setIsLoading] = useState(false)
   const {userProfile: user} = useStateAuth()
   const { dropText, files } = dropData;
   var fileLength = dropData?.files ? Object.keys(dropData?.files).length : 0;
@@ -65,29 +66,40 @@ const DropsBox = () => {
   }
   const handleSubmit = async(e)=>{
     e.preventDefault();
+    setIsLoading(true)
     if(!(dropText.trim() || files)) return
     // const user2 = chat.uid
     // const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`
-    let fileUrl = []
+    let fileUrl 
 
     if (files){
         for (let file of files){
           const url = await uploadFile(file)
-          fileUrl.push(url)
+          if (!fileUrl){fileUrl=[]}
+          fileUrl = [ ...fileUrl,url]
         }
-
+        await addDoc(collection(db, 'drop'),{
+          authorId: user.uid,
+          comments: 0,
+          dropFilePath: fileUrl,
+          createdAt: Timestamp.fromDate(new Date()),
+          dropText,
+          likes:[]
+        })
+    } 
+    if (!files){
+      await addDoc(collection(db, 'drop'),{
+        authorId: user.uid,
+        comments: 0,
+        dropFilePath: false,
+        createdAt: Timestamp.fromDate(new Date()),
+        dropText,
+        likes:[]
+      })
     }
 
-    await addDoc(collection(db, 'drop'),{
-      authorId: user.uid,
-      comments: 0,
-      dropFilePath: fileUrl,
-      createdAt: Timestamp.fromDate(new Date()),
-      dropText,
-      likes:[]
-    })
-
     setDropData({ dropText: '', files: null });
+    setIsLoading(false)
   }
   // TODO: CLEANSE INPUT AND HANDLE ERRORS;
 
@@ -124,9 +136,9 @@ const DropsBox = () => {
             onChange={handleChangeText}
             value={dropText}
           />
-          <button className="px-3 py-2 rounded-md bg-bodyColor text-white font-semibold text-center" onClick={handleSubmit}>
+          {!isLoading ? <button className="px-3 py-2 rounded-md bg-bodyColor text-white font-semibold text-center" onClick={handleSubmit}>
             Drop
-          </button>
+          </button> : <CircularProgress/>}
         </div>
 
         {/*error Message  */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useStateAuth } from "../context/Auth";
 import {
   doc,
@@ -27,7 +27,7 @@ import DropsList from "../components/drops/DropsList";
 
 const Drops = () => {
   const { drops, setDrops } = useStateAuth();
-
+  const countRef = useRef(0)
   const likeDrop  = async(drop)=>{
     const dropLikes = ()=>{
       const dropIndex = drops.findIndex(dropItem=>dropItem.id === drop.id)
@@ -72,26 +72,28 @@ const Drops = () => {
             const authorRef = doc(db, "users", data.authorId)
             getDoc(authorRef).then((userDoc)=>{
                 const authorData = userDoc.data()
-                
-                drops[document.id].username = authorData.name;
+                drops[document.id].name = authorData.name;
                 drops[document.id].avatar = authorData.avatar;
+                countRef.current = countRef.current + 1
+                if (countRef.current === dropsArray.length){
+                  setDrops(dropsArray)
 
+                }
             })
     
         });
 
-        const dropsArray = Object.values(drops) 
-        setDrops(dropsArray)
+        var dropsArray = Object.values(drops) 
       } catch (error) {
         console.log(error);
       }
     };
 
-    if (!drops.length) {
-      getDrops();
-    }
+    
+     return()=> getDrops();
+    
   }, []);
-  console.log(drops)
+  
   return (
     <div className="flex flex-col gap-2 p-3">
       <DropsList drops = {drops} likeDrop = {likeDrop}/>

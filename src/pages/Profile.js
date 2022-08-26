@@ -1,122 +1,191 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { storage, db, auth } from "../lib/firebase";
 import {
   ref,
   getDownloadURL,
   uploadBytes,
   deleteObject,
-
 } from "firebase/storage";
-import { getDoc, doc, updateDoc , setDoc, writeBatch} from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  updateDoc,
+  setDoc,
+  writeBatch,
+  limit,
+  query,
+  collection,
+  where,
+  orderBy,
+} from "firebase/firestore";
 import { Link, Outlet, useParams } from "react-router-dom";
 import { useStateAuth } from "../context/Auth";
 import ProfilePic from "../components/profile/ProfilePic";
 import TabTitle from "../components/profile/TabTitle";
-import { UilEnvelope } from '@iconscout/react-unicons'
+import { UilEnvelope } from "@iconscout/react-unicons";
+import { getDrops } from "../lib/utils";
+import ProfileContents from "../components/profile/ProfileContents";
 
 const Profile = ({ image }) => {
-
-  const { userId,location } = useParams();
-  const { setUser, user, setUserProfile, userProfile, setEditModal, profile, setProfile, setProfileContents  } = useStateAuth();
-
+  const { userId, location } = useParams();
+  const countRef = useRef(0);
+  const {
+    user,
+    setUserProfile,
+    userProfile,
+    setEditModal,
+    profile,
+    setProfile,
+    setProfileContents,
+    profileContents
+  } = useStateAuth();
+  // const [drops, setDrops] = useState(null)
   const [activeState, setActiveState] = useState(null);
+  const isFollowing = () => {
+    const index = userProfile?.following?.findIndex(
+      (follow) => follow === userId
+    );
 
-  const isFollowing = ()=>{
-    const index = userProfile?.following?.findIndex(follow=> follow === userId);
-
-    if (index === -1){
-      return false
+    if (index === -1) {
+      return false;
     }
-    return true
-  }
+    return true;
+  };
 
-  const handleFollow = async(id)=>{
-    const batch = writeBatch(db) 
-    const userId = userProfile.uid;
+  const handleFollow = async (id) => {
+    const batch = writeBatch(db);
+    const userId = userProfile?.uid;
 
-    const userToFollowRef = doc(db, 'users', id);
-    const userRef = doc(db, 'users', userId);
+    const userToFollowRef = doc(db, "users", id);
+    const userRef = doc(db, "users", userId);
 
     const userToFollow = profile;
-    const userToFollowFollowers = userToFollow.followers
+    const userToFollowFollowers = userToFollow.followers;
 
-    const following = userProfile.following;
+    const following = userProfile?.following;
 
-    const userIndex = following.findIndex(follow=>follow === id);
-    const userToFollowFollowersIndex = userToFollowFollowers.findIndex(follow=>follow === userId);
+    const userIndex = following.findIndex((follow) => follow === id);
+    const userToFollowFollowersIndex = userToFollowFollowers.findIndex(
+      (follow) => follow === userId
+    );
 
-    if (userIndex === -1){
+    if (userIndex === -1) {
       following.push(id);
       userToFollowFollowers.push(userId);
 
-      batch.update(userRef,{
-        following
+      batch.update(userRef, {
+        following,
       });
-      batch.update(userToFollowRef,{
-        followers: userToFollowFollowers 
+      batch.update(userToFollowRef, {
+        followers: userToFollowFollowers,
       });
+    } else {
+      following.splice(userIndex, 1);
+      userToFollowFollowers.splice(userToFollowFollowersIndex, 1);
 
-    } else{
-      
-      following.splice(userIndex,1);
-      userToFollowFollowers.splice(userToFollowFollowersIndex, 1)
-
-      batch.update(userRef,{
-        following
+      batch.update(userRef, {
+        following,
       });
-      batch.update(userToFollowRef,{
-        followers: userToFollowFollowers 
+      batch.update(userToFollowRef, {
+        followers: userToFollowFollowers,
       });
     }
 
     await batch.commit();
-    setProfile({...profile, followers:userToFollowFollowers})
-
+    setProfile({ ...profile, followers: userToFollowFollowers });
   };
 
   useEffect(() => {
-    const id = userId === auth.currentUser.uid ? auth.currentUser.uid : userId;
+    if (!userProfile) return
+    const id = userId === auth.currentUser?.uid ? auth.currentUser?.uid : userId;
     getDoc(doc(db, "users", id)).then((docsnap) => {
       if (docsnap.exists) {
         setProfile({ ...profile, ...docsnap.data() });
-        if (userId === auth.currentUser.uid)
+        if (userId === auth.currentUser?.uid)
           setUserProfile({ ...userProfile, ...docsnap.data() });
       }
     });
-    
-  }, [ userId]);
+  }, [userId, ]);
 
-  useEffect(()=>{
-    setActiveState({[location]:true})
-    setProfileContents(location ? location : 'drops')
-},[location, setProfileContents])
+  useEffect(() => {
+    setActiveState({ [location]: true });
+  }, [location]);
+
+  useEffect(() => {
+    if (!userProfile) return
+
+    const getFilteredDrops = () => {
+      const dropsRef = collection(db, "drop");
+
+      if (location === "media") {
+        const q = query(
+          dropsRef,
+          where("authorId", "==", userId),
+          where("dropFilePath", "!=", false),
+          orderBy("dropFilePath"),
+          orderBy("createdAt", "desc"),
+          limit(20)
+        );
+        return getDrops(countRef, setProfileContents, q, location);
+      }
+
+      if (location === "likes") {
+        const q = query(
+          dropsRef,
+          where("likes", "array-contains", userId), 
+          orderBy("createdAt", "desc"),
+          limit(20)
+        );
+        return getDrops(countRef, setProfileContents, q, location);
+      }
+
+      const q = query(
+        dropsRef,
+        where("authorId", "==", userId),
+        orderBy('createdAt', 'desc'),
+        limit(20),       
+      );
+
+      getDrops(countRef, setProfileContents, q, location);
+    };
+
+    getFilteredDrops();
+  }, [location, userProfile]);
+
+  console.log(profile)
 
   if (profile) {
     return (
       <div>
-        <ProfilePic AVI={profile?.avatar}  bgImgURL = {profile?.bgImg}/>
-        {userId === auth.currentUser.uid ? (
+        <ProfilePic AVI={profile?.avatar} bgImgURL={profile?.bgImg} />
+        {userId === auth.currentUser?.uid ? (
           <button
             className="mt-2 px-2 text-base  rounded-full border-black/70 border-[.05rem] float-right md:font-medium mr-3"
-            onClick={() => {setEditModal(true)}}
+            onClick={() => {
+              setEditModal(true);
+            }}
           >
             Edit Profile
           </button>
         ) : (
           <span className="float-right mt-2 flex items-center gap-2">
-            <button><UilEnvelope/></button>
-            {!isFollowing() ? (<button
-              className=" px-2 text-base bg-black text-white rounded-full  border-[.05rem] mr-3"
-              onClick={()=>handleFollow(profile.uid)}
-            >
-              Follow
-            </button>):(
-              <button
-              className=" px-2 text-base  bg-gray-400 text-white rounded-full  border-[.05rem] mr-3"
-              onClick={()=>handleFollow(profile.uid)}
-            >
-              Unfollow
+            <button>
+              <UilEnvelope />
             </button>
+            {!isFollowing() ? (
+              <button
+                className=" px-2 text-base bg-black text-white rounded-full  border-[.05rem] mr-3"
+                onClick={() => handleFollow(profile?.uid)}
+              >
+                Follow
+              </button>
+            ) : (
+              <button
+                className=" px-2 text-base  bg-gray-400 text-white rounded-full  border-[.05rem] mr-3"
+                onClick={() => handleFollow(profile?.uid)}
+              >
+                Unfollow
+              </button>
             )}
           </span>
         )}
@@ -127,7 +196,7 @@ const Profile = ({ image }) => {
             <div className="mb-3">
               <div className="flex gap-4">
                 <p className="font-semibold">
-                  @{userId === user.uid ? userProfile?.name : profile?.name}
+                  @{userId === user?.uid ? userProfile?.name : profile?.name}
                 </p>
               </div>
             </div>
@@ -137,7 +206,7 @@ const Profile = ({ image }) => {
               <p className="font-semibold">Bio</p>
 
               <p className="w-[70%]">
-                {userId === user.uid ? userProfile?.bio : profile?.bio}
+                {userId === user?.uid ? userProfile?.bio : profile?.bio}
               </p>
             </div>
 
@@ -164,11 +233,7 @@ const Profile = ({ image }) => {
         <div className="profilePage__body">
           <div className="profilePage__pageTitle flex justify-around">
             <Link to={``} replace={true}>
-              <TabTitle
-                text="Drops"
-                isActive={!location}
-                name="drops"
-              />
+              <TabTitle text="Drops" isActive={!location} name="drops" />
             </Link>
             {/* <Link to="with_replies" replace={true}>
               <TabTitle
@@ -193,7 +258,7 @@ const Profile = ({ image }) => {
             </Link>
           </div>
           <section>
-            <Outlet />
+            {location ? <Outlet /> : <ProfileContents profileContents = {profileContents}/>}
           </section>
         </div>
       </div>

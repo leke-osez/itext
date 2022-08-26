@@ -11,12 +11,20 @@ const Comment = ({ comment, likeComment }) => {
   const handleLike = ()=>{
     likeComment({id:comment.id, likeId: userProfile.uid})
   }
+  const isLiked = ()=>{
+    const index = comment.likes.findIndex(like=> like === userProfile.uid);
+
+    if (index === -1){
+      return false
+    }
+    return true
+  }
   return (
     <div className="flex items-start mb-5 w-full">
       <div className="flex items-start mb-5 w-full">
         {/* DROP AVATAR */}
         <div className="w-20 h-5">
-          <AvatarContainer src={comment?.avatar} className="avatar" />
+          <AvatarContainer user={comment} className="avatar" />
         </div>
 
         {/* comment CONTENT */}
@@ -26,7 +34,7 @@ const Comment = ({ comment, likeComment }) => {
             {/* AUTHOR NAME */}
             <div className=" border-r-[.2px] px-1 text-sm">
               <p className=" text-black/90 font-medium    ">
-                {comment?.authorName || "Shark"}
+                {comment.name }
               </p>
               <p className=" text-black/60 font-medium">
                 @{comment?.authorName || "hammerhead"}
@@ -47,7 +55,7 @@ const Comment = ({ comment, likeComment }) => {
 
             {/* comment ACTIONS */}
             <div className="border-[.1px] rounded-b-lg flex justify-center gap-10 font-thin w-full max-w-[600px] py-2">
-              <DropAction DropIcon={UilHeartAlt} text={comment?.likes.length} handleClick = {handleLike}/>
+              <DropAction DropIcon={UilHeartAlt} text={comment?.likes.length} handleClick = {handleLike} isLiked = {isLiked()}/>
               {/* <DropAction DropIcon={UilComment} text ={comment?.comments.length}/> */}
             </div>
           </div>

@@ -8,7 +8,9 @@ import { useStateAuth } from "../context/Auth";
 
 const SignOutModal = ({setModal}) => {
     const navigate = useNavigate();
-    const { setSignOutModal } = useStateAuth();
+    const { setSignOutModal,setAppUsers,
+      setUserProfile,
+      setAcctMenu,} = useStateAuth();
 
 
     const handleSignOut = async () => {
@@ -18,6 +20,9 @@ const SignOutModal = ({setModal}) => {
               isOnline: false,
             });
             await signOut(auth);
+            setAppUsers(null);
+            setUserProfile(null);
+            setAcctMenu(null)
             navigate("/signin", { replace: true });
           } catch (err) {
             console.log(err);

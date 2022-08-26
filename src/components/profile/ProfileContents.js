@@ -1,71 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, where, query, limit } from "firebase/firestore";
+import { collection, getDocs, where, query, limit, orderBy } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import DropsList from "../drops/DropsList";
 import { useStateAuth } from "../../context/Auth";
 import { CircularProgress } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { handleLikeDrop } from "../../lib/utils";
 
 const ProfileContents = () => {
-  const { profileContents, profile:userProfile, } = useStateAuth();
-  const [dropsData, setDropsData] = useState(null);
-  const dropsRef = collection(db, "drop");
-    console.log(profileContents)
-  useEffect(() => {
-    const getDropsData = async () => {
-      const dropsList = [];
-      try {   
+  const { profileContents, setProfileContents } = useStateAuth();
+  const {location} = useParams();
 
-          switch (profileContents) {
-            case "media": {
-              const q = query(
-                dropsRef,
-                where("authorId", "==", userProfile.uid),
-                where("dropFilePath", "==", "[]"),
-                limit(20)
-              );
-              const drops = await getDocs(q);
-              drops.forEach((drop) => {dropsList.push({id:drop.id,...drop.data()}); console.log(drop.data())});
-              break;
-            }
-            case "likes":{
-                console.log('likes')
-              const q = query(
-                dropsRef,
-                where("likes", "array-contains", userProfile.uid),
-                limit(20)
-              );
-              const drops = await getDocs(q);
-              drops.forEach((drop) => {dropsList.push({id:drop.id,...drop.data()}); console.log(drop.data())});
-              break;}
-              case "drops":{
-                console.log('empty')
-                const q = query(
-                    dropsRef,
-                    where("authorId", "==", userProfile.uid),
-                    limit(20)
-                  );
-                  const drops = await getDocs(q);
-                  drops.forEach((drop) => dropsList.push({id:drop.id,...drop.data()}))
-              break;}
-            default:{
-                
-    
-              break;}
-          }
-          if (!profileContents){
-            
-          }
-      } catch (error) {
-        console.log(error)
+  const locate = location ? location : 'drops';
+  const setDrops = (drops,drop)=>{
+
+    const dropLikes = ()=>{
+      const dropIndex = drops.findIndex(dropItem=>dropItem.id === drop.id)
+      const dropItem = drops[dropIndex]
+      const isLiked = dropItem.likes.findIndex(like => like === drop.likeId)
+       // NOT LIKED
+       if (isLiked === -1){
+        return [drop.likeId,...dropItem.likes]
       }
-      setDropsData(dropsList)
-    };
+      return dropItem.likes.filter(like=> like !== drop.likeId)
+    }
+    setProfileContents({...profileContents,[locate]:profileContents[locate]?.map((dropItem)=>{
+      if (dropItem.id === drop?.id){
+        return{...dropItem, likes: dropLikes()}
+      }
+      return dropItem
+    })})
+  }
 
-    getDropsData()
-  }, [profileContents]);
+ 
   return (
     <div className="py-6 px-10">
-      {dropsData ? <DropsList drops={dropsData} /> : <CircularProgress />}
+      {profileContents[locate] ? (profileContents[locate].length ? <DropsList drops={profileContents[locate]} likeDrop = {handleLikeDrop(profileContents[locate], setDrops)}/> : <p>No {location} yet... create a drop</p>): <CircularProgress />}
     </div>
   );
 };

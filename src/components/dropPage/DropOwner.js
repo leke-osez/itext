@@ -13,6 +13,14 @@ const DropOwner = ({drop, likeDrop}) => {
   const handleLike = ()=>{
     likeDrop({id:drop?.id, likeId:userProfile.uid})
   }
+  const isLiked = ()=>{
+    const index = drop?.likes?.findIndex(like=> like === userProfile.uid);
+
+    if (index === -1){
+      return false
+    }
+    return true
+  }
   return (
     <div className="flex items-start mb-5">
       {/* DROP AVATAR */}
@@ -28,7 +36,7 @@ const DropOwner = ({drop, likeDrop}) => {
           {/* AUTHOR NAME */}
           <div className=" border-r-[.2px] px-1 text-sm">
             <p className=" text-black/90 font-medium    ">
-              {drop?.authorName || "Shark"}
+              {drop?.username || drop?.name }
             </p>
             <p className=" text-black/60 font-medium">
               @{drop?.authorName || "hammerhead"}
@@ -47,10 +55,10 @@ const DropOwner = ({drop, likeDrop}) => {
           </p>
 
           {/* FILE */}
-          <div className={` min-w-[200px] max-w-[600px]  ${drop?.dropFilePath.length && 'grid grid-cols-2 grid-rows-2 gap-1 aspect-[5/3]'}`}>
+          <div className={` min-w-[200px] max-w-[600px]  ${drop?.dropFilePath?.length && 'grid grid-cols-2 grid-rows-2 gap-1 aspect-[5/3]'}`}>
             {drop?.dropFilePath && (
               drop?.dropFilePath.map((filepath, i) => {
-                const fileLength = drop?.dropFilePath.length
+                const fileLength = drop?.dropFilePath?.length
                 if (fileLength === 1) {
                   return (
                     <DropFile
@@ -99,7 +107,7 @@ const DropOwner = ({drop, likeDrop}) => {
           
           {/* DROP ACTIONS */}
           <div className="border-[.1px] rounded-b-lg flex justify-center gap-10 font-thin w-full max-w-[600px] py-2">
-              <DropAction DropIcon={UilHeartAlt} text = {drop?.likes.length} handleClick= {handleLike}/>
+              <DropAction DropIcon={UilHeartAlt} text = {drop?.likes.length} handleClick= {handleLike} isLiked = {isLiked()}/>
               <DropAction DropIcon={UilComment} text ={drop?.comments}/>
           </div>
         </div>

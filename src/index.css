@@ -33,7 +33,7 @@ code {
 }
 
 .body_screen {
-  height: calc(100vh - 70px);
+  height: calc(100vh - 10rem);
 }
 .auth_form label {
   font-weight: 600;

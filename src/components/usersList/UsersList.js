@@ -3,7 +3,7 @@ import User from './User'
 
 const UsersList = ({users, selectUser, user1}) => {
   return (
-    <div className='' >
+    <div className='body_screen bg-white' >
       <div className='flex justify-center w-full '>
         {
         <p className='text-lg font-semibold text-center'>Chats</p>
@@ -16,6 +16,9 @@ const UsersList = ({users, selectUser, user1}) => {
 
         <User key = {user.uid} profile= {user} selectedUser = {selectUser} user1 ={user1} isUserList/>
       ))}
+      
+      
+      
       </div>
       </div>
     </div>

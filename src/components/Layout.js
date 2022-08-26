@@ -69,18 +69,17 @@ const Layout = () => {
           <EditModal />
         </Modal>
       )}
+
       {/* PAGE LAYOUT */}
       <div
-        className={`sticky left-0 top-0 hidden sm:flex sm:w-fit md:w-[20%] min-w-fit ${
-          isChatPath() ? "hidden" : ""
-        }`}
+        className={`sticky left-0 top-0 hidden sm:flex sm:w-fit md:w-[23%] min-w-fit`}
       >
         <SideMenu />
       </div>
 
       <div className="flex-1 relative">
-        {/* HEADING */}
-        <div className="sticky top-0 left-0 w-full h-[3.5rem] border-b-[.1rem] bg-white/95 z-10 flex items-center justify-center px-3">
+        {/* HEADING */} 
+        <div className="sticky top-0 left-0 w-full h-[3.5rem] border-b-[.1rem] bg-white/95 z-[40] flex items-center justify-center px-3">
           <p className="absolute left-2 top-[50%] translate-y-[-50%]">
             {locationExtractor(location.pathname)}
           </p>
@@ -99,7 +98,7 @@ const Layout = () => {
 
       {/* WIDGETS AT THE RIGHT */}
       <div
-        className={`hidden md:flex md:w-[25%] ${
+        className={`hidden md:flex md:w-[27%] ${
           isChatPath() ? "md:hidden" : ""
         }`}
       >
