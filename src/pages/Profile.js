@@ -18,7 +18,7 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, useNavigate, Outlet, useParams } from "react-router-dom";
 import { useStateAuth } from "../context/Auth";
 import ProfilePic from "../components/profile/ProfilePic";
 import TabTitle from "../components/profile/TabTitle";
@@ -37,9 +37,12 @@ const Profile = ({ image }) => {
     profile,
     setProfile,
     setProfileContents,
-    profileContents
+    profileContents,
+    setChat,
+    setMsgs
   } = useStateAuth();
-  // const [drops, setDrops] = useState(null)
+
+  const navigate = useNavigate()
   const [activeState, setActiveState] = useState(null);
   const isFollowing = () => {
     const index = userProfile?.following?.findIndex(
@@ -95,8 +98,17 @@ const Profile = ({ image }) => {
     setProfile({ ...profile, followers: userToFollowFollowers });
   };
 
+  const sendMessage = ()=>{
+    if (!profile) return
+    setMsgs([])
+    setChat(profile)
+    navigate('/chat')
+  
+
+  }
   useEffect(() => {
-    if (!userProfile) return
+    
+
     const id = userId === auth.currentUser?.uid ? auth.currentUser?.uid : userId;
     getDoc(doc(db, "users", id)).then((docsnap) => {
       if (docsnap.exists) {
@@ -152,7 +164,6 @@ const Profile = ({ image }) => {
     getFilteredDrops();
   }, [location, userProfile]);
 
-  console.log(profile)
 
   if (profile) {
     return (
@@ -169,7 +180,7 @@ const Profile = ({ image }) => {
           </button>
         ) : (
           <span className="float-right mt-2 flex items-center gap-2">
-            <button>
+            <button onClick={sendMessage}>
               <UilEnvelope />
             </button>
             {!isFollowing() ? (

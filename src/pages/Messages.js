@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   doc,
   getDoc,
@@ -13,6 +13,8 @@ import {
   updateDoc,
   writeBatch,
   arrayUnion,
+  increment,
+  getDocs,
 } from "firebase/firestore";
 import {
   ref,
@@ -28,12 +30,13 @@ import User from "../components/usersList/User";
 import MessageForm from "../components/chat/MessageForm";
 import CloseIcon from "@mui/icons-material/Close";
 import Message from "../components/chat/Message";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, dialogClasses } from "@mui/material";
 import ChatArea from "../components/chat/ChatArea";
 import { ArrowBackIos } from "@mui/icons-material";
 
 const Messages = () => {
   const user1 = auth.currentUser.uid;
+  const countRef = useRef(0)
 
   // states
   const {
@@ -46,14 +49,14 @@ const Messages = () => {
     chatList,
     setChatList,
     unreadMsgs,
-    setUnreadMsgs
+    setUnreadMsgs,
+    msgs, setMsgs
   } = useStateAuth();
   const [text, setText] = useState("");
   const [img, setImg] = useState({
     pic: "",
     prevpic: "",
   });
-  const [msgs, setMsgs] = useState([]);
 
   const navigate = useNavigate();
   const { pic, prevpic } = img;
@@ -102,19 +105,25 @@ const Messages = () => {
       media: url || "",
     });
 
+
+
     batch.set(doc(db, "lastMsg", id), {
       lastMsg: Text,
       from: user1,
       to: user2,
       createdAt: Timestamp.fromDate(new Date()),
       media: url || "",
-      unread: true,
-    });
+      unread: increment(1),
 
-    batch.set(doc(db, 'notification', user2),{
-      unread: true
-    }, {merge: true})
+    }, {merge: true});
+    batch.set(doc(db, "chatList", user2), {
+      chats:arrayUnion(user1)
+    }, {merge: true});
+    batch.set(doc(db, "chatList", user1), {
+      chats:arrayUnion(user2)
+    }, {merge: true});
 
+    
     await batch.commit()
   };
   const showProfile = () => {
@@ -123,47 +132,94 @@ const Messages = () => {
   const selectUser = async (profile) => {
     setChat(profile);
     setChatList(false);
-    const user2 = profile.uid;
-    const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
-    const msgsRef = collection(db, "messages", id, "chat");
-    const q = query(msgsRef, orderBy("createdAt", "asc"));
-
-   const unsub = onSnapshot(q, (querySnapshot) => {
-      let msgs = [];
-      querySnapshot.forEach((doc) => {
-        msgs.push(doc.data());
-      });
-      setMsgs(msgs);
-    });
-
-    
-
-    const docSnap = await getDoc(doc(db, "lastMsg", id));
-    if (docSnap.data() && docSnap.data().from !== user1) {
-      await updateDoc(doc(db, "lastMsg", id), { unread: false });
-    }
+   
   };
 
   useEffect(() => {
     // GET USERS THAT ARE NOT CURRENT USER
-
+    if (!userProfile) return()=>{}
     let unsub;
-    const usersRef = collection(db, "users");
+    const usersRef = doc(db, "chatList",userProfile.uid);
 
     // query parameters
-    const q = query(usersRef, where("uid", "not-in", [user1]));
+    const q = query(usersRef);
 
     // execute query
     unsub = onSnapshot(q, (querySnapshot) => {
-      let users = [];
-      querySnapshot.forEach((doc) => {
-        users.push(doc.data());
-      });
-      setAppUsers(users);
+      if (!querySnapshot.data()) {
+        setAppUsers([])
+        return;}
+
+      const chats = querySnapshot.data().chats
+      let splitChats= []
+      const chatLength = chats.length;
+
+      // AFTER RETRIEVING 
+      const downloadedchats = []
+
+
+      // SPLITTING THE LISTS INTO 10s FOR QUERYING
+      if (chatLength > 10){
+          const chatSize = Math.floor(chatLength/10)
+          const maxSize = chatSize +1
+          let start=0
+          for (let i = 0; i < maxSize; i++){
+            splitChats[i] = chats.split(start,((10*(i+1))))
+            start = 10*(i+1)
+          }
+      }
+
+      // CHECK IF CHATLIST WAS SPLIT
+      if(splitChats.length){
+        splitChats.forEach((chatArray,)=>{
+          const usersRef =collection(db, 'users')
+          const q = query(usersRef, where("uid", "in", chatArray))
+          getDocs(q).then((users)=>{
+            users.forEach((user, )=>{
+              downloadedchats.push(user.data)
+              countRef.current = countRef.current + 1
+              if (countRef.current>= (splitChats[(splitChats.length)-1]).length){
+                
+                setAppUsers(downloadedchats);
+                countRef.current = 0
+              }
+            })
+
+            
+          })
+        })
+    
+      }else{
+        const usersRef =collection(db, 'users')
+        console.log(chats)
+          const q = query(usersRef, where("uid", "in", chats ))
+          getDocs(q).then((users)=>{
+            users.forEach((user, )=>{
+              downloadedchats.push(user.data())
+              
+              countRef.current = countRef.current + 1
+              console.log(chats.length); console.log(countRef.current); 
+              if (countRef.current >= chats.length ){
+                console.log(downloadedchats)
+                setAppUsers(downloadedchats);
+                countRef.current = 0
+              }
+              
+            })
+            
+          })
+      }
+      
+
+      // let users = [];
+      // querySnapshot.forEach((doc) => {
+      //   users.push(doc.data());
+      // });
+      // setAppUsers(users);
     });
 
     return () => unsub();
-  }, []);
+  }, [userProfile]);
 
   useEffect(()=>{
     if(!unreadMsgs) return ()=>{}
@@ -186,6 +242,49 @@ const Messages = () => {
       });
     }
   }, []);
+
+  useEffect(()=>{
+    if (!chat) return()=>{}
+    console.log(chat)
+    const user2 = chat.uid;
+    const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+    const msgsRef = collection(db, "messages", id, "chat");
+    const q = query(msgsRef, orderBy("createdAt", "asc"));
+
+   const unsub = onSnapshot(q, (querySnapshot) => {
+      let msgs = [];
+      querySnapshot.forEach((doc) => {
+        msgs.push(doc.data());
+      });
+      setMsgs(msgs);
+    });
+
+  
+    getDoc(doc(db, "lastMsg", id)).then((docSnap)=>{
+
+      if (docSnap.data() && docSnap.data().from !== user1) {
+        updateDoc(doc(db, "lastMsg", id), { unread: 0 });
+      }
+    })
+  },[chat])
+
+  // useEffect(() => {
+  //   if (!msgs.length) {
+  //     const user2 = chat.uid;
+  //   const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+  //   const msgsRef = collection(db, "messages", id, "chat");
+  //   const q = query(msgsRef, orderBy("createdAt", "asc"));
+
+  //  getDocs(q, (querySnapshot) => {
+  //     let msgs = [];
+  //     querySnapshot.forEach((doc) => {
+  //       msgs.push(doc.data());
+  //     });
+  //     setMsgs(msgs);
+  //   });
+
+  //   }
+  // }, []);
 
   return (
     <div className="sm:flex  w-full body_screen">

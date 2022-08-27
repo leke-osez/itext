@@ -64,20 +64,21 @@ export const getDrops = async (countRef, setDrops, q, location, profContents) =>
       const authorRef = doc(db, "users", data.authorId);
       getDoc(authorRef).then((userDoc) => {
         const authorData = userDoc.data();
-
         drops[document.id].name = authorData.name;
         drops[document.id].avatar = authorData.avatar;
         
         countRef.current = countRef.current + 1;
        
         if (countRef.current === dropsArray.length) {
+          
+
           setDrops({...profContents, [location ? location : 'drops']:dropsArray.length ? dropsArray : []});
           countRef.current = 0;
         }
       });
     });
-
-    var dropsArray = Object.values(drops);
+    
+    var dropsArray =location == 'likes' ? Object.values(drops).reverse() : Object.values(drops);
   } catch (error) {
     console.log(error);
   }

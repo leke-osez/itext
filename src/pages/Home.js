@@ -36,25 +36,7 @@ const Home = () => {
   const { userProfile, setUserProfile,  setAppUsers,} = useStateAuth();
   const navigate = useNavigate()
 
-  useEffect(() => {
-
-    let unsub;
-    const usersRef = collection(db, "users");
-
-    // query parameters
-    const q = query(usersRef, where("uid", "not-in", [user1]));
-
-    // execute query
-    unsub = onSnapshot(q, (querySnapshot) => {
-        let users = [];
-        querySnapshot.forEach((doc) => {
-          users.push(doc.data());
-        });
-        setAppUsers(users);
-      });
-      
-    return () => unsub();
-  }, []);
+ 
 
 
   useEffect(() => {

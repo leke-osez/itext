@@ -13,7 +13,7 @@ const UsersList = ({users, selectUser, user1, }) => {
       <div className='overflow-y-auto overflow-x-hidden'>
       <div className='w-full '>
 
-      {users.map((user)=>(
+      {!users.length ? <p>No chats yet...</p> : users.map((user)=>(
 
         <User key = {user.uid} profile= {user} selectedUser = {selectUser} user1 ={user1} isUserList/>
       ))}

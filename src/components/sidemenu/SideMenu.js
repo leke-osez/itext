@@ -27,6 +27,7 @@ const SideMenu = () => {
     setAcctMenu(true)
   }
   const handleNotifications = (notifications)=>{
+    if (!notifications?.unread) return
     const {unread} = notifications;
     if (unread) {
       setUnreadMsgs(true)
@@ -61,7 +62,7 @@ const SideMenu = () => {
           {/* <MenuContent text="Forums" Icon={UilCompass} path= '/explore'/> */}
           <MenuContent text="Profile" Icon={UilUser} path = {`/profile/${userProfile?.uid}`}/>
           <MenuContent text="Chat" Icon={MessageIcon} path = '/chat' prop = {UilMessage}/>
-          <MenuContent text="Settings" Icon={UilSetting} path = '/setting'/>
+          <MenuContent text="Settings" Icon={UilSetting} path = '/settings'/>
         </nav>
 
         {/* DROP BUTTON */}

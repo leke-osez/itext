@@ -16,6 +16,7 @@ import Drops from "./pages/Drops";
 import DropPage from "./pages/DropPage";
 import ProfileContents from "./components/profile/ProfileContents";
 import ProfileContentsHome from "./components/profile/profileContentHome";
+import Settings from "./pages/Settings";
 
 function App() {
   const [isMenu, setIsMenu] = useState(false);
@@ -62,6 +63,15 @@ function App() {
                   element={
                     <PrivateRoute>
                       <Home />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="settings"
+                  element={
+                    <PrivateRoute>
+                      <Settings />
                     </PrivateRoute>
                   }
                 />

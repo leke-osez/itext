@@ -7,8 +7,8 @@ const MessageIcon = ()=>{
     return(
       <div className="relative">
 {    unreadMsgs &&    <div className="h-[.4rem] aspect-square rounded-full bg-blue-500 p-0 absolute -top-0 -right-0"></div>
-}        <UilMessage/>
-      </div>
+}        <div className='text-black/60'> <UilMessage/>
+      </div></div>
     )
   }
 

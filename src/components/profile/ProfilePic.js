@@ -10,7 +10,7 @@ const ProfilePic = ({ setProfile, profileImgFor, AVI, bgImgURL, bgImgFor, clearB
           <img
             src={bgImgURL}
             alt=""
-            className="profilePic__backgroundImage bg-textColor/30 object-cover"
+            className="profilePic__backgroundImage bg-gray-100 object-cover"
           />
         </div>
 
@@ -31,7 +31,7 @@ const ProfilePic = ({ setProfile, profileImgFor, AVI, bgImgURL, bgImgFor, clearB
           </div>
         )}
         
-          <div className={`profilePic__avatarContainer`}>
+          <div className={`profilePic__avatarContainer`} >
             <Avatar src={AVI} className={`profilePic__avatar`} />
             {setProfile && (
               <label htmlFor={profileImgFor}>

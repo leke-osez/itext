@@ -25,7 +25,7 @@ const User = ({ profile, selectedUser, isUserList, user1 }) => {
   }, []);
   return (
     <div
-      className={`w-full flex items-center gap-4  cursor-pointer  ${
+      className={`w-full flex items-start gap-4  cursor-pointer  ${
         isUserList && "sm:px-4 py-2 mb-3"
       } ${chat?.uid === user2 && isUserList ? "bg-slate-600/10" : ""}`}
       onClick={selectedUser ? selectUser : null }
@@ -53,8 +53,8 @@ const User = ({ profile, selectedUser, isUserList, user1 }) => {
             </p>
           </div>
         )}
-        <p className="rounded-full bg-orange-500 text-white w-fit px-[1px] text-sm">
-          {data?.unread && data?.from !== user1 ? "unread" : ""}
+        <p className="rounded-full bg-textColor text-white w-fit px-[.5rem] text-sm">
+          {data?.unread && data?.from !== user1 ? `${data?.unread} unread` : ""}
         </p>
       </div>
     </div>

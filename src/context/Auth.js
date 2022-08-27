@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   // MESSAGES 
   const [messages, setMessages] = useState({})
+  const [msgs, setMsgs] = useState([]);
   const [unreadMsgs, setUnreadMsgs] = useState(false)
   
   // MODAL STATES
@@ -62,7 +63,8 @@ export const AuthProvider = ({ children }) => {
     editModal, setEditModal,
     profile, setProfile,
     profileContents, setProfileContents,
-    unreadMsgs, setUnreadMsgs
+    unreadMsgs, setUnreadMsgs,
+    msgs, setMsgs
   };
 
   // HANDLE AUTHENTICATION
