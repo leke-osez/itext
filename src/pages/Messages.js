@@ -11,6 +11,8 @@ import {
   orderBy,
   setDoc,
   updateDoc,
+  writeBatch,
+  arrayUnion,
 } from "firebase/firestore";
 import {
   ref,
@@ -43,6 +45,8 @@ const Messages = () => {
     setChat,
     chatList,
     setChatList,
+    unreadMsgs,
+    setUnreadMsgs
   } = useStateAuth();
   const [text, setText] = useState("");
   const [img, setImg] = useState({
@@ -70,6 +74,7 @@ const Messages = () => {
     });
   };
   const handleSubmit = async (e) => {
+    const batch = writeBatch(db)
     e.preventDefault();
     if (!text && !pic) return;
     const Text = text;
@@ -97,7 +102,7 @@ const Messages = () => {
       media: url || "",
     });
 
-    await setDoc(doc(db, "lastMsg", id), {
+    batch.set(doc(db, "lastMsg", id), {
       lastMsg: Text,
       from: user1,
       to: user2,
@@ -105,6 +110,12 @@ const Messages = () => {
       media: url || "",
       unread: true,
     });
+
+    batch.set(doc(db, 'notification', user2),{
+      unread: true
+    }, {merge: true})
+
+    await batch.commit()
   };
   const showProfile = () => {
     navigate(`/profile/${chat.uid}`);
@@ -117,13 +128,15 @@ const Messages = () => {
     const msgsRef = collection(db, "messages", id, "chat");
     const q = query(msgsRef, orderBy("createdAt", "asc"));
 
-    onSnapshot(q, (querySnapshot) => {
+   const unsub = onSnapshot(q, (querySnapshot) => {
       let msgs = [];
       querySnapshot.forEach((doc) => {
         msgs.push(doc.data());
       });
       setMsgs(msgs);
     });
+
+    
 
     const docSnap = await getDoc(doc(db, "lastMsg", id));
     if (docSnap.data() && docSnap.data().from !== user1) {
@@ -132,6 +145,8 @@ const Messages = () => {
   };
 
   useEffect(() => {
+    // GET USERS THAT ARE NOT CURRENT USER
+
     let unsub;
     const usersRef = collection(db, "users");
 
@@ -149,6 +164,18 @@ const Messages = () => {
 
     return () => unsub();
   }, []);
+
+  useEffect(()=>{
+    if(!unreadMsgs) return ()=>{}
+
+    const docRef = doc(db, 'notification', userProfile?.uid)
+    updateDoc(docRef, {
+      unread: false
+    }).then(()=>{
+      setUnreadMsgs(false)
+    })
+
+  },[unreadMsgs])
 
   useEffect(() => {
     if (!userProfile) {

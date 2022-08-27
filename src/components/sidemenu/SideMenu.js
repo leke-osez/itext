@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MenuContent from "./MenuContent";
 import {
   UilEstate,
@@ -15,14 +15,29 @@ import { Avatar } from "@mui/material";
 import { useStateAuth } from "../../context/Auth";
 import logo from '../../assets/img/logo3.png'
 import DropButton from "./DropButton";
+import { getNotifications } from "../../lib/utils";
+import { useLocation } from "react-router-dom";
+import MessageIcon from "./MessageIcon";
 
 const SideMenu = () => {
-  const { userProfile,setDropModal, acctMenu, setAcctMenu, setSignOutModal } = useStateAuth();
-
+  const { userProfile,setDropModal, acctMenu, setAcctMenu, setSignOutModal, setUnreadMsgs, unre } = useStateAuth();
+  const location = useLocation()
   const showAcctMenu = (e)=>{
     e.stopPropagation()
     setAcctMenu(true)
   }
+  const handleNotifications = (notifications)=>{
+    const {unread} = notifications;
+    if (unread) {
+      setUnreadMsgs(true)
+    }
+    
+  }
+  useEffect(() => {
+    if (userProfile)
+      getNotifications(userProfile?.uid, handleNotifications)
+    
+  }, [userProfile]);
   return (
     <div className=" h-screen w-full sticky top-0 border-r-[.3px]">
 
@@ -45,7 +60,7 @@ const SideMenu = () => {
           <MenuContent text="Drops" Icon={UilRaindropsAlt} path ='/drops'/>
           {/* <MenuContent text="Forums" Icon={UilCompass} path= '/explore'/> */}
           <MenuContent text="Profile" Icon={UilUser} path = {`/profile/${userProfile?.uid}`}/>
-          <MenuContent text="Chat" Icon={UilMessage} path = '/chat'/>
+          <MenuContent text="Chat" Icon={MessageIcon} path = '/chat' prop = {UilMessage}/>
           <MenuContent text="Settings" Icon={UilSetting} path = '/setting'/>
         </nav>
 
@@ -80,3 +95,4 @@ const SideMenu = () => {
 };
 
 export default SideMenu;
+

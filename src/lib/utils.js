@@ -7,6 +7,7 @@ import {
   setDoc,
   writeBatch,
   getDocs,
+  onSnapshot,
 } from "firebase/firestore";
 
 export const handleFollow = async (id, userProfile, setAction = () => {}) => {
@@ -70,7 +71,6 @@ export const getDrops = async (countRef, setDrops, q, location, profContents) =>
         countRef.current = countRef.current + 1;
        
         if (countRef.current === dropsArray.length) {
-          console.log(dropsArray)
           setDrops({...profContents, [location ? location : 'drops']:dropsArray.length ? dropsArray : []});
           countRef.current = 0;
         }
@@ -118,4 +118,15 @@ export const handleLikeDrop  = (drops, setDrops)=>{
  }
 
  return likeDrop
+}
+
+export const getNotifications = async(id, handleDoc, )=>{
+
+  const notificationRef = doc(db, "notification", id);
+  const unsub = onSnapshot(notificationRef, (doc) => {
+    console.log(doc.data())
+
+    handleDoc(doc.data())
+    })
+
 }

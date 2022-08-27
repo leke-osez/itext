@@ -24,8 +24,10 @@ export const AuthProvider = ({ children }) => {
   // CHAT STATES
   const [chat, setChat ]= useState(null);
   const [chatList, setChatList] = useState(true);
-  // cache messages 
+
+  // MESSAGES 
   const [messages, setMessages] = useState({})
+  const [unreadMsgs, setUnreadMsgs] = useState(false)
   
   // MODAL STATES
   const [dropModal, setDropModal] = useState(false);
@@ -59,7 +61,8 @@ export const AuthProvider = ({ children }) => {
     commentModal, setCommentModal,
     editModal, setEditModal,
     profile, setProfile,
-    profileContents, setProfileContents
+    profileContents, setProfileContents,
+    unreadMsgs, setUnreadMsgs
   };
 
   // HANDLE AUTHENTICATION
