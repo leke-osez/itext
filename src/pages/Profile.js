@@ -108,13 +108,10 @@ const Profile = ({ image }) => {
   }
   useEffect(() => {
     
-
-    const id = userId === auth.currentUser?.uid ? auth.currentUser?.uid : userId;
-    getDoc(doc(db, "users", id)).then((docsnap) => {
+    getDoc(doc(db, "users", userId)).then((docsnap) => {
       if (docsnap.exists) {
-        setProfile({ ...profile, ...docsnap.data() });
-        if (userId === auth.currentUser?.uid)
-          setUserProfile({ ...userProfile, ...docsnap.data() });
+        setProfile(docsnap.data() );
+        if (userId === auth.currentUser?.uid) setProfile({ ...userProfile, ...docsnap.data() });
       }
     });
   }, [userId, ]);
@@ -162,9 +159,9 @@ const Profile = ({ image }) => {
     };
 
     getFilteredDrops();
-  }, [location, userProfile]);
+  }, [location, userProfile, userId]);
 
-
+  console.log(profileContents)
   if (profile) {
     return (
       <div>
