@@ -4,20 +4,28 @@ import { UilHeartAlt } from "@iconscout/react-unicons";
 import DropAction from "../drops/DropAction";
 import Moment from 'react-moment';
 import { useStateAuth } from "../../context/Auth";
+import { useNavigate } from "react-router-dom";
 
 
 const Comment = ({ comment, likeComment }) => {
-  const {userProfile} = useStateAuth()
+  const {userProfile} = useStateAuth();
+  const navigate = useNavigate();
+
   const handleLike = ()=>{
-    likeComment({id:comment.id, likeId: userProfile.uid})
+    likeComment({id:comment.id, likeId: userProfile?.uid})
   }
   const isLiked = ()=>{
-    const index = comment.likes.findIndex(like=> like === userProfile.uid);
+    const index = comment.likes.findIndex(like=> like === userProfile?.uid);
 
     if (index === -1){
       return false
     }
     return true
+  }
+
+  const selectProfile = ()=>{
+    console.log('nav prof ')
+    navigate(`/profile/${comment?.author}`)
   }
   return (
     <div className="flex items-start mb-5 w-full">
@@ -32,14 +40,15 @@ const Comment = ({ comment, likeComment }) => {
           {/* comment META */}
           <div className="flex items-end mb-3 w-full">
             {/* AUTHOR NAME */}
-            <div className=" border-r-[.2px] px-1 text-sm">
-              <p className=" text-black/90 font-medium    ">
-                {comment.name }
-              </p>
-              <p className=" text-black/60 font-medium">
-                @{comment?.authorName || "hammerhead"}
-              </p>
-            </div>
+            <div className=" flex gap-[.12rem] border-r-[.2px] text-sm" onClick={selectProfile}>
+            <p className=" text-black/90 font-medium hover:underline cursor-pointer ">
+              {comment?.name}
+            </p>
+            {/* <p className=" text-black/60 font-medium hover:underline cursor-pointer">
+              @{drop?.authorName || "hammerhead"}
+            </p> */}
+          </div>
+
 
             {/* comment TIMESTAMP */}
             <p className=" text-black/60 ml-3 text-sm"><Moment fromNow >{comment?.createdAt.toDate()}</Moment></p>

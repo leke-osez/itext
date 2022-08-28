@@ -5,12 +5,12 @@ const MenuContent = ({text,Icon,path}) => {
     
   return (
     <Link to = {path}>
-      <div className='flex  items-center cursor-pointer'>
+      <div className='flex mx-2 items-center cursor-pointer'>
           {/* icon */}
-          <span className='md:w-7 md:h-7 md:mr-5 '><Icon className= 'sidemenu__icon text-black/60'/></span>
+          <span className='sm:w-7 sm:h-7 sm:mr-2 md:mr-5'><Icon className= 'sidemenu__icon text-black/60'/></span>
 
           {/* text */}
-          <p className='text-lg sm:hidden md:flex text-black/70'>{text}</p>
+          <p className='text-medium md:text-lg hidden sm:flex text-black/70'>{text}</p>
       </div>
     </Link>
   )

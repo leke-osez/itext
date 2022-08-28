@@ -317,7 +317,7 @@ const Messages = () => {
   // }, []);
 
   return (
-    <div className="sm:flex  w-full body_screen">
+    <div className="sm:flex  w-full h-screen">
       <div
         className={`sm:w-[35%] w-full sm:border-r-[1px] flex-col gap-3 bg-white  h-full sm:sticky sm:top-0 absolute sm:flex z-[30] ${
           chatList ? "sm:flex " : "sm:flex hidden"

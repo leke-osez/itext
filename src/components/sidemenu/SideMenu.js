@@ -51,7 +51,7 @@ const SideMenu = () => {
         </div>
 
         {/* app name */}
-        <p className="text-xl sm:hidden md:flex font-semibold">trickle</p>
+        <p className="text-xl hidden sm:flex font-semibold">trickle</p>
       </div>
 
       {/* contents */}

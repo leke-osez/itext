@@ -165,6 +165,9 @@ const Profile = ({ image }) => {
     getFilteredDrops();
   }, [location, userProfile, userId]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   if (profile) {
     return (
       <div>

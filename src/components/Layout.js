@@ -1,8 +1,9 @@
 import React from "react";
 import SideMenu from "./sidemenu/SideMenu";
 import Widget from "./widgets/Widget";
-import { Outlet } from "react-router-dom";
-import { SearchOutlined } from "@mui/icons-material";
+import { Outlet, useNavigate } from "react-router-dom";
+import { ArrowBackIos, SearchOutlined } from "@mui/icons-material";
+import { UilEllipsisH } from '@iconscout/react-unicons'
 import { useLocation } from "react-router-dom";
 import Modal from "./Modal";
 import DropModal from "./dropsBox/DropModal";
@@ -13,6 +14,7 @@ import EditModal from "./profile/EditModal";
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate()
   const { dropModal, setDropModal, setAcctMenu, signOutModal, setSignOutModal, commentModal, setCommentModal, editModal, setEditModal } = useStateAuth();
 
   // EXTRACT WINDOW LOCATION FROM PATH;
@@ -27,7 +29,7 @@ const Layout = () => {
   };
 
   const isChatPath = () => {
-    var rx = /\/chat/g;
+    var rx = /\/(chat)/;
     var arr = rx.exec(location.pathname);
     if (arr) {
       return true;
@@ -72,14 +74,16 @@ const Layout = () => {
 
       {/* PAGE LAYOUT */}
       <div
-        className={`sticky left-0 top-0 hidden sm:flex sm:w-fit md:w-[23%] min-w-fit`}
+        className={`sticky left-0 top-0 hidden s500:flex w-fit md:w-[23%] min-w-fit`}
       >
         <SideMenu />
       </div>
 
       <div className="flex-1 relative">
         {/* HEADING */} 
-        <div className="sticky top-0 left-0 w-full h-[3.5rem] border-b-[.1rem] bg-white/95 z-[40] flex items-center justify-center px-3">
+        {!isChatPath() && <div className="sticky top-0 left-0 w-full h-[3.5rem] border-b-[.1rem] bg-white/95 z-[40] flex items-center justify-center px-3">
+          <button onClick={()=>navigate(-1)} className = 'absolute left-2 text-black/60 '><ArrowBackIos className=""/></button>
+          
           <p className="absolute left-2 top-[50%] translate-y-[-50%]">
             {locationExtractor(location.pathname)}
           </p>
@@ -90,7 +94,9 @@ const Layout = () => {
             />
             <SearchOutlined className="text-sm text-black/30 p-[0.2rem]" />
           </div>
-        </div>
+
+          <button className="text-black/50 absolute right-2"><UilEllipsisH/></button>
+        </div>}
 
         {/* DYNAMIC CONTENT */}
         <Outlet />
@@ -98,7 +104,7 @@ const Layout = () => {
 
       {/* WIDGETS AT THE RIGHT */}
       <div
-        className={`hidden md:flex md:w-[27%] ${
+        className={`hidden s885:flex md:w-[23%] ${
           isChatPath() ? "md:hidden" : ""
         }`}
       >

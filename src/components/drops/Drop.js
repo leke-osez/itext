@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import DropAction from "./DropAction";
-import { UilHeartAlt, UilComment } from '@iconscout/react-unicons'
+import { UilHeartAlt, UilComment, UilEllipsisH } from '@iconscout/react-unicons'
 import DropFile from "../dropsBox/DropFile";
 import { useStateAuth } from "../../context/Auth";
 import { Avatar } from "@mui/material";
@@ -32,6 +32,7 @@ const Drop = ({ drop, likeDrop }) => {
   }
 
   const selectProfile = ()=>{
+    console.log('nav prof ')
     navigate(`/profile/${drop?.authorId}`)
   }
 
@@ -39,17 +40,21 @@ const Drop = ({ drop, likeDrop }) => {
     likeDrop({id:drop?.id, likeId:userProfile?.uid})
   }
 
+  const showDropMenu = ()=>{
+
+  }
   return (
-    <div className="flex items-start mb-5">
+    <div className="flex items-start mb-5 ">
       {/* DROP AVATAR */}
       <div className="w-20 h-5">
         <Avatar src={drop?.avatar} className="avatar" />
       </div>
 
       {/* DROP CONTENT */}
-      <div className="w-full">
+      <div className="w-full max-w-[500px]">
         
         {/* DROP META */}
+        <div className="flex justify-between">
         <div className="flex items-end mb-1">
           {/* AUTHOR NAME */}
           <div className=" flex gap-[.12rem] border-r-[.2px] text-sm" onClick={selectProfile}>
@@ -65,16 +70,18 @@ const Drop = ({ drop, likeDrop }) => {
           
           <p className=" text-black/60 ml-3 text-sm"><Moment fromNow >{drop?.createdAt.toDate()}</Moment></p>
         </div>
+        <button className="text-black/50 " onClick = {showDropMenu}><UilEllipsisH/></button>
+        </div>
 
-        <div className={`flex flex-col w-full cursor-pointer hover:bg-slate-400/20 ml-2 ${drop?.dropFilePath?.length && 'border-[.2px] rounded-lg'}`} onClick = {openDrop}>
+        <div className={`flex flex-col w-full  cursor-pointer hover:bg-slate-400/20 ml-2 ${drop?.dropFilePath?.length && 'border-[.2px] rounded-lg'}`} onClick = {openDrop}>
           
           {/* TEXT */}
-          <p className="w-full max-w-[600px] text-base text-black font-medium  mb-4">
+          <p className="w-full  text-base text-black font-medium  mb-4">
             {drop?.dropText}
           </p>
 
           {/* FILE */}
-          <div className={` min-w-[200px] max-w-[600px]  ${drop?.dropFilePath?.length && 'grid grid-cols-2 grid-rows-2 gap-1 aspect-[5/3]'}`}>
+          <div className={` min-w-[200px] w-full  ${drop?.dropFilePath?.length && 'grid grid-cols-2 grid-rows-2 gap-1 aspect-[5/3]'}`}>
             {drop?.dropFilePath && (
               drop?.dropFilePath.map((filepath, i) => {
                 const fileLength = drop?.dropFilePath.length

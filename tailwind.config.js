@@ -15,7 +15,14 @@ module.exports = {
         'base' : '14px'
       },
       screens:{
-        md: '780px'
+        "md": '780px',
+        's500': '500px',
+        's700': '700px',
+        's885': '885px',
+        's970': '970px',
+        
+        
+        
       }
     },
   },

@@ -33,7 +33,7 @@ code {
 }
 
 .body_screen {
-  height: calc(100vh - 10rem);
+  height: calc(100vh - 3.5rem);
 }
 .auth_form label {
   font-weight: 600;
@@ -211,6 +211,24 @@ code {
 .pageTitle:hover .hovering{
   display:block;
   
+}
+
+/* SCROLLL BAR */
+::-webkit-scrollbar{
+  width: .60rem;
+  background-color: gainsboro;
+  border-radius: .5rem;
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: gray;
+  border-radius: .5rem;
+}
+
+::-webkit-scrollbar-thumb:hover{
+   background-color: rgb(105, 104, 104);
+;
+
 }
 @tailwind base;
 @tailwind components;

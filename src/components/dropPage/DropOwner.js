@@ -5,14 +5,18 @@ import DropFile from "../dropsBox/DropFile";
 import { useStateAuth } from "../../context/Auth";
 import { Avatar } from "@mui/material";
 import Moment from 'react-moment'
+import { useNavigate } from 'react-router-dom';
 
 
 const DropOwner = ({drop, likeDrop}) => {
 
-  const {userProfile} = useStateAuth()
+  const {userProfile} = useStateAuth();
+  const navigate = useNavigate();
+
   const handleLike = ()=>{
     likeDrop({id:drop?.id, likeId:userProfile.uid})
   }
+
   const isLiked = ()=>{
     const index = drop?.likes?.findIndex(like=> like === userProfile.uid);
 
@@ -20,6 +24,10 @@ const DropOwner = ({drop, likeDrop}) => {
       return false
     }
     return true
+  }
+  const selectProfile = ()=>{
+    console.log('nav prof ')
+    navigate(`/profile/${drop?.authorId}`)
   }
   return (
     <div className="flex items-start mb-5">
@@ -34,7 +42,7 @@ const DropOwner = ({drop, likeDrop}) => {
         {/* DROP META */}
         <div className="flex items-end mb-3">
           {/* AUTHOR NAME */}
-          <div className=" border-r-[.2px] px-1 text-sm">
+          <div className=" border-r-[.2px] px-1 text-sm" onClick={selectProfile}>
             <p className=" text-black/90 font-medium    ">
               {drop?.username || drop?.name }
             </p>

@@ -134,7 +134,7 @@ useEffect(()=>{
                   )}
                 
               </div>:
-              <div className="body_screen w-full">
+              <div className=" w-full">
                 
                 </div>}
 
