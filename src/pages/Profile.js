@@ -18,7 +18,7 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
-import { Link, useNavigate, Outlet, useParams } from "react-router-dom";
+import { Link, useNavigate, Outlet, useParams, useLocation } from "react-router-dom";
 import { useStateAuth } from "../context/Auth";
 import ProfilePic from "../components/profile/ProfilePic";
 import TabTitle from "../components/profile/TabTitle";
@@ -28,6 +28,7 @@ import ProfileContents from "../components/profile/ProfileContents";
 
 const Profile = ({ image }) => {
   const { userId, location } = useParams();
+  const locationPath = useLocation().pathname
   const countRef = useRef(0);
   const {
     user,
@@ -125,6 +126,9 @@ const Profile = ({ image }) => {
 
     const getFilteredDrops = () => {
       const dropsRef = collection(db, "drop");
+      
+      // PREVIOUS PROFILE STATES
+      setProfileContents({})
 
       if (location === "media") {
         const q = query(
@@ -147,7 +151,7 @@ const Profile = ({ image }) => {
         );
         return getDrops(countRef, setProfileContents, q, location);
       }
-
+      
       const q = query(
         dropsRef,
         where("authorId", "==", userId),
@@ -161,7 +165,6 @@ const Profile = ({ image }) => {
     getFilteredDrops();
   }, [location, userProfile, userId]);
 
-  console.log(profileContents)
   if (profile) {
     return (
       <div>

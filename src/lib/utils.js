@@ -58,7 +58,17 @@ export const getDrops = async (countRef, setDrops, q, location, profContents) =>
   try {
     // const q = query(collection(db, "drop"),orderBy('createdAt','desc'), limit(20))
     const docs = await getDocs(q);
+    
+    let tracker = 0;
+    if(docs.empty){
+      setDrops({[location ? location : 'drops']: []});
+
+    }
     docs.forEach((document) => {
+      console.log('in loop')
+      // if (tracker === 0 && !document.data()){
+
+      // }
       const data = document.data();
       drops[document.id] = { ...data, id: document.id };
       const authorRef = doc(db, "users", data.authorId);
@@ -69,16 +79,17 @@ export const getDrops = async (countRef, setDrops, q, location, profContents) =>
         
         countRef.current = countRef.current + 1;
        
-        if (countRef.current === dropsArray.length) {
-          
+        if (countRef.current === dropsArray.length) {    
 
-          setDrops({...profContents, [location ? location : 'drops']:dropsArray.length ? dropsArray : []});
+          setDrops({[location ? location : 'drops']: dropsArray.length ? dropsArray : []});
           countRef.current = 0;
         }
       });
     });
     
-    var dropsArray =location == 'likes' ? Object.values(drops).reverse() : Object.values(drops);
+    // SORT LIKES DROPS 
+    var dropsArray = location === 'likes' ? Object.values(drops).reverse() : Object.values(drops);
+
   } catch (error) {
     console.log(error);
   }
