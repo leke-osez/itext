@@ -15,6 +15,7 @@ import {
   arrayUnion,
   increment,
   getDocs,
+  runTransaction,
 } from "firebase/firestore";
 import {
   ref,
@@ -105,26 +106,45 @@ const Messages = () => {
       media: url || "",
     });
 
+  
 
+    await runTransaction(db, async (transaction) => {
 
-    batch.set(doc(db, "lastMsg", id), {
-      lastMsg: Text,
-      from: user1,
-      to: user2,
-      createdAt: Timestamp.fromDate(new Date()),
-      media: url || "",
-      unread: increment(1),
+      const user1_chatList = await transaction.get(doc(db, "chatList", user1));
+      const user2_chatList = await transaction.get(doc(db, "chatList", user2));
 
-    }, {merge: true});
-    batch.set(doc(db, "chatList", user2), {
-      chats:arrayUnion(user1)
-    }, {merge: true});
-    batch.set(doc(db, "chatList", user1), {
-      chats:arrayUnion(user2)
-    }, {merge: true});
+      transaction.set(doc(db, "lastMsg", id), {
+        lastMsg: Text,
+        from: user1,
+        to: user2,
+        createdAt: Timestamp.fromDate(new Date()),
+        media: url || "",
+        unread: increment(1),
+  
+      }, {merge: true});
+
+      
+
+      let newUser2_chatList, newUser1_chatList;
+
+      if (user2_chatList.exists()){
+        newUser2_chatList = [user1,...(user2_chatList.data().chats.filter((user)=> user !== user1 )), ]
+      }
+      if(user1_chatList.exists()){
+        newUser1_chatList = [ user2,...(user1_chatList.data().chats.filter((user)=> user !== user2 )), ]
+      }
+      transaction.set(doc(db, "chatList", user2), {
+        chats: !user2_chatList.exists() ? [user1] : newUser2_chatList
+      });
+      transaction.set(doc(db, "chatList", user1), {
+        chats: !user1_chatList.exists() ? [user2] : newUser1_chatList
+      });
+      });
+    
+   
+
 
     
-    await batch.commit()
   };
   const showProfile = () => {
     navigate(`/profile/${chat.uid}`);
@@ -150,12 +170,18 @@ const Messages = () => {
         setAppUsers([])
         return;}
 
-      const chats = querySnapshot.data().chats
+      const chats = querySnapshot.data().chats;
+
+      // STRUCTURE THE CHATLIST 
+      const chatsObj = {}
+      chats.forEach(chat=>chatsObj[chat]= {});
+
       let splitChats= []
       const chatLength = chats.length;
 
       // AFTER RETRIEVING 
-      const downloadedchats = []
+     
+      const sortedChats = []
 
 
       // SPLITTING THE LISTS INTO 10s FOR QUERYING
@@ -175,6 +201,8 @@ const Messages = () => {
           const usersRef =collection(db, 'users')
           const q = query(usersRef, where("uid", "in", chatArray))
           getDocs(q).then((users)=>{
+            const downloadedchats = []
+
             users.forEach((user, )=>{
               downloadedchats.push(user.data)
               countRef.current = countRef.current + 1
@@ -191,17 +219,20 @@ const Messages = () => {
     
       }else{
         const usersRef =collection(db, 'users')
-        console.log(chats)
+
           const q = query(usersRef, where("uid", "in", chats ))
           getDocs(q).then((users)=>{
+            const downloadedchats = []
             users.forEach((user, )=>{
               downloadedchats.push(user.data())
               
               countRef.current = countRef.current + 1
-              console.log(chats.length); console.log(countRef.current); 
               if (countRef.current >= chats.length ){
-                console.log(downloadedchats)
-                setAppUsers(downloadedchats);
+                downloadedchats.forEach(chat=>{
+                  chatsObj[chat.uid] = chat
+                })
+
+                setAppUsers(Object.values(chatsObj))
                 countRef.current = 0
               }
               
@@ -245,7 +276,6 @@ const Messages = () => {
 
   useEffect(()=>{
     if (!chat) return()=>{}
-    console.log(chat)
     const user2 = chat.uid;
     const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
     const msgsRef = collection(db, "messages", id, "chat");
