@@ -19,7 +19,7 @@ const CommentBox = ({
         <Avatar src={user?.avatar} />
         <TextareaAutosize
           minRows={1}
-          className="h-3 p-4 sm:w-[100%] min-w-[250px] max-w-[400px]"
+          className="h-3 p-4 sm:w-[100%] w-[80%] sm:min-w-[250px] sm:max-w-[400px]"
           placeholder="Write comment..."
           onChange={handleChangeText}
           value={dropText}

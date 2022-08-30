@@ -134,11 +134,14 @@ const Messages = () => {
         newUser1_chatList = [ user2,...(user1_chatList.data().chats.filter((user)=> user !== user2 )), ]
       }
       transaction.set(doc(db, "chatList", user2), {
-        chats: !user2_chatList.exists() ? [user1] : newUser2_chatList
+        chats: !user2_chatList.exists() ? [user1] : newUser2_chatList,
+        unopen: true
       });
       transaction.set(doc(db, "chatList", user1), {
-        chats: !user1_chatList.exists() ? [user2] : newUser1_chatList
+        chats: !user1_chatList.exists() ? [user2] : newUser1_chatList,
+        
       });
+
       });
     
    
@@ -155,6 +158,7 @@ const Messages = () => {
    
   };
 
+  // GET CURRENT USER
   useEffect(() => {
     // GET USERS THAT ARE NOT CURRENT USER
     if (!userProfile) return()=>{}
@@ -255,9 +259,9 @@ const Messages = () => {
   useEffect(()=>{
     if(!unreadMsgs) return ()=>{}
 
-    const docRef = doc(db, 'notification', userProfile?.uid)
+    const docRef = doc(db, 'chatList', userProfile?.uid)
     updateDoc(docRef, {
-      unread: false
+      unopen: false
     }).then(()=>{
       setUnreadMsgs(false)
     })

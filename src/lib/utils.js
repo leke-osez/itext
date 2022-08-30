@@ -134,11 +134,11 @@ export const handleLikeDrop  = (drops, setDrops)=>{
 
 export const getNotifications = async(id, handleDoc, )=>{
 
-  const notificationRef = doc(db, "notification", id);
+  const notificationRef = doc(db, "chatList", id);
   const unsub = onSnapshot(notificationRef, (doc) => {
-    console.log(doc.data())
-
-    handleDoc(doc.data())
+    if (!doc.exists()) return
+    const msgNotification = doc.data()
+    handleDoc(msgNotification.unopen)
     })
 
 }

@@ -221,7 +221,7 @@ const EditModal = ({ image,  }) => {
     }, [pic,]);
 
   return (
-    <div className="w-[15rem] sm:w-[25rem] md:w-[30rem] p-3 bg-white ">
+    <div className="w-full bg-white sm:w-[25rem] md:w-[30rem] py-4 md:px-3 bg-white ">
       <ProfilePic
         setProfile 
         AVI={prevavatar}

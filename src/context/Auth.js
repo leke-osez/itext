@@ -35,7 +35,9 @@ export const AuthProvider = ({ children }) => {
   const [signOutModal, setSignOutModal] = useState(false);
   const [commentModal, setCommentModal] = useState(false);
   const [editModal, setEditModal] = useState(false)
-
+  
+  // NAVIGATION MENU
+  const [navMenu, setNavMenu] = useState(false)
 
   // ACCOUNT MENU
   const [acctMenu, setAcctMenu] = useState(false);
@@ -47,6 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   // USER RECOMMENDATIONS
   const [userRecommendations, setUserRecommendations] = useState([])
+
   const value = {
     user, setUser, 
     userProfile, setUserProfile,
@@ -64,7 +67,8 @@ export const AuthProvider = ({ children }) => {
     profile, setProfile,
     profileContents, setProfileContents,
     unreadMsgs, setUnreadMsgs,
-    msgs, setMsgs
+    msgs, setMsgs,
+    navMenu, setNavMenu
   };
 
   // HANDLE AUTHENTICATION

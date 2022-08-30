@@ -27,23 +27,22 @@ const SideMenu = () => {
     setAcctMenu(true)
   }
   const handleNotifications = (notifications)=>{
-    if (!notifications?.unread) return
-    const {unread} = notifications;
-    if (unread) {
+    if (!notifications) return
+    if (notifications) {
       setUnreadMsgs(true)
     }
     
   }
   useEffect(() => {
-    if (userProfile)
+    if (!userProfile) return;
       getNotifications(userProfile?.uid, handleNotifications)
     
   }, [userProfile]);
   return (
-    <div className=" h-screen w-full sticky top-0 border-r-[.3px]">
+    <div className="absolute s500:h-screen w-full  bottom-0 s500:sticky s500:top-0 border-r-[.3px] bg-white">
 
       {/* header */}
-      <div className="border-b flex gap-3 items-center py-2 px-2 h-[3.5rem]">
+      <div className="border-b hidden s500:flex gap-3 items-center py-2 px-2 h-[3.5rem]">
 
         {/* logo */}
         <div className="">
@@ -55,22 +54,22 @@ const SideMenu = () => {
       </div>
 
       {/* contents */}
-      <div className="flex flex-col gap-2 justify-between items-center md:items-start sidemenu__contents ">
-        <nav className="flex flex-col gap-5 mt-6 md:px-9 ">
+      <div className="s500:flex shadow-lg s500:shadow-none rounded-t-lg s500:rounded-none flex-col  gap-2 s500:justify-between s500:items-center md:items-start sidemenu__contents ">
+        <nav className="s500:flex justify-center s500:flex-col grid grid-cols-3 grid-rows-2 gap-5 mt-6 md:px-z">
           <MenuContent text="Home" Icon={UilEstate} path= '/'/>
           <MenuContent text="Drops" Icon={UilRaindropsAlt} path ='/drops'/>
           {/* <MenuContent text="Forums" Icon={UilCompass} path= '/explore'/> */}
           <MenuContent text="Profile" Icon={UilUser} path = {`/profile/${userProfile?.uid}`}/>
           <MenuContent text="Chat" Icon={MessageIcon} path = '/chat' prop = {UilMessage}/>
-          <MenuContent text="Settings" Icon={UilSetting} path = '/settings'/>
+          {/* <MenuContent text="Settings" Icon={UilSetting} path = '/settings'/> */}
         </nav>
 
         {/* DROP BUTTON */}
-        <div className="md:ml-9" onClick={(e)=>e.stopPropagation()}><DropButton handleModal = {()=>setDropModal(true)}/></div>
+        <div className="hidden s500:flex md:ml-9" onClick={(e)=>e.stopPropagation()}><DropButton handleModal = {()=>setDropModal(true)}/></div>
 
 
         {/* ACCOUNTS  */}
-        <div className = 'relative flex gap-7 items-center w-fit md:ml-9 md:hover:bg-slate-400/40 py-2  px-2 md:rounded-full justify-between cursor-pointer' onClick={showAcctMenu}>
+        <div className = 'relative hidden s500:flex gap-7 items-center w-fit md:ml-9 md:hover:bg-slate-400/40 py-2  px-2 md:rounded-full justify-between cursor-pointer' onClick={showAcctMenu}>
           
           <span className="flex items-center">
             <Avatar src={userProfile ? userProfile.avatar : ""} />

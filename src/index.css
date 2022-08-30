@@ -128,7 +128,7 @@ code {
 /* PROFILE */
 .profilePic__background{
   position: relative;
-  width: 100% ;
+  width: 100% !important;
   padding-top: 35%;
   background-size: cover;
   background-position: center;
@@ -142,7 +142,7 @@ code {
 }
 .profilePic__backgroundImage{
   position: relative;
-  width: 100%;
+  width: 100% !important;
   height: 100%
 }
 .profilePic__avatarContainer{
@@ -162,7 +162,7 @@ code {
   bottom: 0;
   height: 100% !important;
   width: 100% !important;
-  border: #ffffff 5px solid !important;
+  border:  5px solid !important;
   box-sizing: border-box;
   background-color: rgb(196, 216, 216)
 }

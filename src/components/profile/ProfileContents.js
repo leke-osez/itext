@@ -34,7 +34,7 @@ const ProfileContents = () => {
 
  
   return (
-    <div className="py-6 px-10">
+    <div className="py-6 sm:px-10 px-3">
       {profileContents[locate] ? (profileContents[locate].length ? <DropsList drops={profileContents[locate]} likeDrop = {handleLikeDrop(profileContents[locate], setDrops)}/> : <p>No {location} yet... create a drop</p>): <CircularProgress />}
     </div>
   );

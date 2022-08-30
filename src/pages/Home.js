@@ -33,7 +33,7 @@ const Home = () => {
   const user1 = auth.currentUser.uid;
 
   // states
-  const { userProfile, setUserProfile,  setAppUsers,} = useStateAuth();
+  const { userProfile, setUserProfile, } = useStateAuth();
   const navigate = useNavigate()
 
  

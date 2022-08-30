@@ -31,7 +31,7 @@ const ProfilePic = ({ setProfile, profileImgFor, AVI, bgImgURL, bgImgFor, clearB
           </div>
         )}
         
-          <div className={`profilePic__avatarContainer`} >
+          <div className={`profilePic__avatarContainer `} >
             <Avatar src={AVI} className={`profilePic__avatar`} />
             {setProfile && (
               <label htmlFor={profileImgFor}>

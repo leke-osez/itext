@@ -192,9 +192,9 @@ const DropPage = ({dropPage}) => {
   
   }, []);
 
-  useEffect(()=>{
-
-  })
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <div className='p-3'>
         <DropOwner drop={activeDrop} likeDrop = {likeDrop}/>
