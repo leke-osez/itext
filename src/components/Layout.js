@@ -49,7 +49,7 @@ const Layout = () => {
   }
   return (
     <div className="flex" onClick={pageHandler} >
-      {navMenu && <div className="bg-black/70 fixed top-0 bottom-0 left-0 right-0 z-[60]"></div>}
+      {navMenu && <div className="bg-black/70 fixed s500:hidden top-0 bottom-0 left-0 right-0 z-[60]"></div>}
       {/* MODALS */}
       {/* Modal for drop box */}
       {dropModal && (
@@ -87,7 +87,7 @@ const Layout = () => {
       </div>
       
       {navMenu && (<div
-        className={`s500:hidden fixed bottom-0 w-full left-0 right-0 s500:top-0  s500:w-fit md:w-[23%] s500:min-w-fit z-[100]`}
+        className={`s500:hidden fixed transition duration-300 w-full -bottom-[6rem] left-0 right-0 s500:top-0  s500:w-fit md:w-[23%] s500:min-w-fit z-[100] ${navMenu ? 'bottom-0' : ' '}`}
         onClick = {(e)=> e.stopPropagation()}
       >
         <SideMenu />

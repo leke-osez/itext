@@ -39,7 +39,7 @@ const SideMenu = () => {
     
   }, [userProfile]);
   return (
-    <div className="absolute s500:h-screen w-full  bottom-0 s500:sticky s500:top-0 border-r-[.3px] bg-white">
+    <div className="absolute s500:h-screen w-full s500:rounded-none rounded-t-[2rem] bottom-0 s500:sticky s500:top-0 border-r-[.3px] bg-white">
 
       {/* header */}
       <div className="border-b hidden s500:flex gap-3 items-center py-2 px-2 h-[3.5rem]">
