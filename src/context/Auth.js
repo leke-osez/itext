@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
 
   //DROPS
-  const [drops, setDrops] = useState([]);
+  const [drops, setDrops] = useState(null);
   const [activeDrop, setActiveDrop] = useState(null)
 
   // USER RECOMMENDATIONS

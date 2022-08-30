@@ -24,6 +24,7 @@ import {
 } from "firebase/storage";
 import { auth, db, storage } from "../lib/firebase";
 import DropsList from "../components/drops/DropsList";
+import { CircularProgress } from "@mui/material";
 
 const Drops = () => {
   const { drops, setDrops } = useStateAuth();
@@ -90,13 +91,13 @@ const Drops = () => {
     };
 
     
-     return()=> getDrops();
+     getDrops();
     
   }, []);
   
   return (
     <div className="flex flex-col gap-2 p-3">
-      <DropsList drops = {drops} likeDrop = {likeDrop}/>
+      {drops ? <DropsList drops = {drops} likeDrop = {likeDrop}/> : <CircularProgress/>}
     </div>
   );
 };
