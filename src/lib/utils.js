@@ -8,6 +8,7 @@ import {
   writeBatch,
   getDocs,
   onSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
 
 export const handleFollow = async (id, userProfile, setAction = () => {}) => {
@@ -143,3 +144,8 @@ export const getNotifications = async(id, handleDoc, )=>{
   unsub()
 
 }
+
+export const deleteDropFromDB = async (id)=>{
+  const docRef = doc(db, 'drop', id)
+  await deleteDoc(docRef)
+} 

@@ -48,7 +48,9 @@ export const AuthProvider = ({ children }) => {
   const [activeDrop, setActiveDrop] = useState(null)
 
   // USER RECOMMENDATIONS
-  const [userRecommendations, setUserRecommendations] = useState([])
+  const [userRecommendations, setUserRecommendations] = useState([]);
+
+  const [dropMenuOpen, setDropMenuOpen] = useState(false)
 
   const value = {
     user, setUser, 
@@ -68,7 +70,8 @@ export const AuthProvider = ({ children }) => {
     profileContents, setProfileContents,
     unreadMsgs, setUnreadMsgs,
     msgs, setMsgs,
-    navMenu, setNavMenu
+    navMenu, setNavMenu,
+    setDropMenuOpen, dropMenuOpen
   };
 
   // HANDLE AUTHENTICATION

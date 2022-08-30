@@ -7,7 +7,7 @@ const DropsList = ({drops, likeDrop}) => {
   return (
     <div className='flex flex-col pr-2 md:px-4 gap-3 '>
         {drops.map(drop=>(
-          <Drop drop={drop} key={drop?.id} likeDrop={likeDrop}/>
+          <Drop drop={drop} key={drop?.id} likeDrop={likeDrop} drops = {drops}/>
         ))}
     </div>
   )
