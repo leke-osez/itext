@@ -140,5 +140,6 @@ export const getNotifications = async(id, handleDoc, )=>{
     const msgNotification = doc.data()
     handleDoc(msgNotification.unopen)
     })
+  unsub()
 
 }

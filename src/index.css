@@ -102,6 +102,27 @@ code {
   font-size: 4rem !important;
 }
 
+
+/* Nav menu slide out */
+.nav__menu{
+  position: fixed;
+  bottom:0;
+  left: 0;
+  transition: transform .3s
+  cubic-bezier(0, .52, 0, 1);
+  width: 100vw;
+  height: fit-content;  
+}
+
+.nav__menu-hide{
+  transform: translate3d(0, 100vh, 0);
+}
+
+.nav__menu-show{
+  transform: translate3d(0, 0, 0);
+
+}
+
 /* DROP */
 .avatar{
   width: 2.8rem !important;

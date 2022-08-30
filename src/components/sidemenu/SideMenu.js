@@ -38,8 +38,9 @@ const SideMenu = () => {
       getNotifications(userProfile?.uid, handleNotifications)
     
   }, [userProfile]);
+  console.log('test')
   return (
-    <div className="absolute s500:h-screen w-full s500:rounded-none rounded-t-[2rem] bottom-0 s500:sticky s500:top-0 border-r-[.3px] bg-white">
+    <div className="relative  w-full  rounded-t-[2rem] s500:h-screen  s500:rounded-none s500:sticky s500:top-0 bottom-0  border-r-[.3px] bg-white">
 
       {/* header */}
       <div className="border-b hidden s500:flex gap-3 items-center py-2 px-2 h-[3.5rem]">
@@ -50,12 +51,12 @@ const SideMenu = () => {
         </div>
 
         {/* app name */}
-        <p className="text-xl hidden sm:flex font-semibold">trickle</p>
+        <p className="text-xl hidden md:flex font-semibold">trickle</p>
       </div>
 
       {/* contents */}
       <div className="s500:flex shadow-lg s500:shadow-none rounded-t-lg s500:rounded-none flex-col  gap-2 s500:justify-between s500:items-center md:items-start sidemenu__contents ">
-        <nav className="s500:flex justify-center s500:flex-col grid grid-cols-3 grid-rows-2 gap-5 mt-6 md:px-z">
+        <nav className="s500:flex justify-center  s500:flex-col grid grid-cols-3 grid-rows-2 gap-5 mt-6 px-3 py-4 md:px-2">
           <MenuContent text="Home" Icon={UilEstate} path= '/'/>
           <MenuContent text="Drops" Icon={UilRaindropsAlt} path ='/drops'/>
           {/* <MenuContent text="Forums" Icon={UilCompass} path= '/explore'/> */}

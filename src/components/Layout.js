@@ -86,8 +86,8 @@ const Layout = () => {
         <SideMenu />
       </div>
       
-      {navMenu && (<div
-        className={`s500:hidden fixed transition duration-300 w-full -bottom-[6rem] left-0 right-0 s500:top-0  s500:w-fit md:w-[23%] s500:min-w-fit z-[100] ${navMenu ? 'bottom-0' : ' '}`}
+      {(<div
+        className={`s500:hidden nav__menu   right-0 s500:top-0 '-bottom-[6rem]' s500:w-fit md:w-[23%] s500:min-w-fit z-[100] ${navMenu ? 'nav__menu-show' : 'nav__menu-hide'}`}
         onClick = {(e)=> e.stopPropagation()}
       >
         <SideMenu />
@@ -127,7 +127,7 @@ const Layout = () => {
       {/* WIDGETS AT THE RIGHT */}
       <div
         className={`hidden s885:flex md:w-[23%] ${
-          isChatPath() ? "md:hidden" : ""
+          isChatPath() ? "s885:hidden" : ""
         }`}
       >
         <Widget />

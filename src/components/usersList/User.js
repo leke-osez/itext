@@ -6,7 +6,7 @@ import { db } from "../../lib/firebase";
 import { CameraAlt } from "@mui/icons-material";
 
 const User = ({ profile, selectedUser, isUserList, user1 }) => {
-  const { chat } = useStateAuth();
+  const { chat, appUsers } = useStateAuth();
 
   const user2 = profile?.uid;
   const { avatar, name, isOnline } = profile;
@@ -19,14 +19,20 @@ const User = ({ profile, selectedUser, isUserList, user1 }) => {
     const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
     let unsub = onSnapshot(doc(db, "lastMsg", id), (doc) => {
       setData(doc.data());
+      appUsers.map(user=>{
+        if (user.uid === user2 ) {
+        return user['time'] = doc.data().createdAt
+      }
+      return user
+    })
     });
 
     return () => unsub();
   }, []);
   return (
     <div
-      className={`w-full flex items-start gap-4  cursor-pointer  ${
-        isUserList && "sm:px-4 py-2 mb-3"
+      className={`w-full flex items-center gap-4  cursor-pointer  ${
+        isUserList && "sm:px-4 py-2 mb-3 items-start"
       } ${chat?.uid === user2 && isUserList ? "bg-slate-600/10" : ""}`}
       onClick={selectedUser ? selectUser : null }
     >

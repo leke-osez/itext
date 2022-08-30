@@ -40,7 +40,8 @@ const Profile = ({ image }) => {
     setProfileContents,
     profileContents,
     setChat,
-    setMsgs
+    setMsgs,
+    setChatList
   } = useStateAuth();
 
   const navigate = useNavigate()
@@ -101,6 +102,7 @@ const Profile = ({ image }) => {
 
   const sendMessage = ()=>{
     if (!profile) return
+    setChatList(false)
     setMsgs([])
     setChat(profile)
     navigate('/chat')

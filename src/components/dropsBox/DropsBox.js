@@ -110,7 +110,7 @@ const DropsBox = () => {
 
       {/* DROPS FORM FOR CREATING DROPS */}
       <form className="w-full md:px-4 flex flex-col items-center">
-        <div className="flex items-end justify-start w-full gap-3 mb-2">
+        <div className="flex  items-end justify-start w-full gap-3 mb-2">
           <div>
             <input
               className="hidden"
@@ -129,11 +129,11 @@ const DropsBox = () => {
               />
             </label>
           </div>
-          <div className="sm:flex gap-x-2 sm:items-end">
+          <div className=" w-full sm:flex gap-x-2 sm:items-end">
             
           <TextareaAutosize
             minRows={3}
-            className="border-[.2px] border-black/20 rounded-md p-4 w-[90%] max-w-[300px] md:flex-1 min-w-[100px] sm:max-w-[400px]"
+            className="border-[.2px] border-black/20 rounded-md p-2 md:p-4 w-[90%] max-w-[300px] md:flex-1 min-w-[100px] sm:max-w-[400px]"
             placeholder="Compose drop..."
             onChange={handleChangeText}
             value={dropText}
