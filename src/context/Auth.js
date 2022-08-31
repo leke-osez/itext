@@ -64,6 +64,8 @@ export const AuthProvider = ({ children }) => {
 
   const [accountDeleteModal, setDeleteAccountModal] = useState(false)
 
+  const [reauthModal, setReauthModal] = useState(false)
+
   const value = {
     user, setUser, 
     userProfile, setUserProfile,
@@ -85,7 +87,8 @@ export const AuthProvider = ({ children }) => {
     navMenu, setNavMenu,
     setDropMenuOpen, dropMenuOpen,
     themeMode, setThemeMode,
-    accountDeleteModal, setDeleteAccountModal
+    accountDeleteModal, setDeleteAccountModal,
+    reauthModal, setReauthModal
   };
 
   // HANDLE AUTHENTICATION

@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useStateAuth } from "../context/Auth";
+import { UilCheckCircle,UilTrashAlt, UilSignOutAlt } from "@iconscout/react-unicons";
 
 const Settings = () => {
   const {
@@ -39,23 +40,38 @@ const Settings = () => {
           Theme mode
         </h2>
 
-        <button onClick={setDark} className=" w-fit px-3 py-2">
-          Dark{" "}
-        </button>
-        <button onClick={setLight} className="  w-fit px-3 py-2">
-          Light{" "}
-        </button>
+        <div className="flex gap-1 items-center">
+          <button onClick={setDark} className=" w-fit px-3 py-2">
+            Dark{" "}
+          </button>
+          {themeMode === "dark" && (
+            <span>
+              <UilCheckCircle className="text-textColor" />
+            </span>
+          )}
+        </div>
+
+        <div className="flex gap-1 items-center" >
+          <button onClick={setLight} className="  w-fit px-3 py-2">
+            Light{" "}
+          </button>
+          {themeMode === "light" && (
+            <span>
+              <UilCheckCircle className="text-textColor" />
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col ">
         <h2 className="font-medium text-lg dark:text-white text-black">
           Account
         </h2>
-        <button onClick={handleSignOut} className="  px-3 py-2 w-fit">
-          Signout
+        <button onClick={handleSignOut} className="flex gap-2  px-3 py-2 w-fit">
+        <span><UilSignOutAlt/></span> Signout
         </button>
-        <button onClick={deleteAccount} className="  px-3 py-2 w-fit">
-          Delete Account
+        <button onClick={deleteAccount} className="flex gap-2  px-3 py-2 w-fit">
+        <span><UilTrashAlt className = 'text-red-500'/></span>Delete Account
         </button>
       </div>
     </div>

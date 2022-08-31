@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { auth, db } from "../../lib/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, query, updateDoc, where, writeBatch } from "firebase/firestore";
 import { deleteUser } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useStateAuth } from "../../context/Auth";
@@ -9,23 +9,41 @@ import { CircularProgress } from "@mui/material";
 
 const AccountDeleteModal = ({ setModal }) => {
   const navigate = useNavigate();
-  const { setSignOutModal, setAppUsers, setUserProfile, setAcctMenu, setDeleteAccountModal } =
+  const {  setAppUsers, setUserProfile, setAcctMenu,userProfile, setDeleteAccountModal, setReauthModal } =
     useStateAuth();
 const [loading, setLoading] = useState(false)
 
+ const reauthenticateUser = ()=>{
+
+ }
   const deleteAccount= async()=>{
     try {
-        setLoading(true)
+        setLoading(true);
         deleteUser(auth.currentUser).then(()=>{
+            const batch = writeBatch(db);
 
-            setAppUsers(null);
-            setUserProfile(null);
-            setAcctMenu(null);
-            navigate("/signin", { replace: true }); 
+            batch.delete(doc(db, 'users', userProfile.uid))
+            batch.delete(doc(db, 'notification', userProfile.uid))
+            batch.delete(doc(db, 'chatList', userProfile.uid))
+            batch.delete(query(doc(db, 'drop',), where('authorId','==', userProfile.uid)))
+            batch.delete(doc(db, 'lastMsg', userProfile.uid))
+
+            batch.commit().then(()=>{
+                setDeleteAccountModal(false)
+                setAppUsers(null);
+                setUserProfile(null);
+                setAcctMenu(null);
+                navigate("/signin", { replace: true }); 
+            })
+            
+        }).catch(()=>{
+            setReauthModal(true)
         })
 
     } catch (error) {
         console.log(error)
+
+        setLoading(false)
     }
     
   }
@@ -47,7 +65,7 @@ const [loading, setLoading] = useState(false)
           <span className="text-red-500 flex gap-2 mt-1">
             <UilExclamationTriangle />
             <p className="text-sm  max-w-[300px]">
-              Deleting this account would mean you wont't be able to recover it
+              Deleting this account would mean you won't be able to recover it
             </p>
           </span>
         </span>

@@ -13,6 +13,7 @@ import CommentModal from "./dropPage/CommentModal";
 import EditModal from "./profile/EditModal";
 import { Avatar } from "@mui/material";
 import AccountDeleteModal from "./modals/AccountDeleteModal";
+import ReauthModal from "./modals/reauthModal";
 
 const Layout = () => {
   const location = useLocation();
@@ -31,6 +32,7 @@ const Layout = () => {
     setDropMenuOpen,
     dropMenuOpen,
     accountDeleteModal,
+    reauthModal
   } = useStateAuth();
 
   // EXTRACT WINDOW LOCATION FROM PATH;
@@ -86,6 +88,12 @@ const Layout = () => {
     {accountDeleteModal && (
         <Modal  disableCancel>
           <AccountDeleteModal />
+        </Modal>
+      )}
+
+    {reauthModal && (
+        <Modal  >
+          <ReauthModal reauth />
         </Modal>
       )}
 
@@ -151,13 +159,13 @@ const Layout = () => {
             <p className="absolute left-2 top-[50%] translate-y-[-50%]">
               {locationExtractor(location.pathname)}
             </p>
-            <div className="md:ml-10 w-[12rem] h-[2rem] flex bg-slate-300/30 rounded-full justify-between items-center">
+            {/* <div className="md:ml-10 w-[12rem] h-[2rem] flex bg-slate-300/30 rounded-full justify-between items-center">
               <input
-                className="text-xs bg-transparent h-full w-full outline-none border-none px-2 dark:text-white placeholder:text-white/80"
+                className="text-xs placeholder:text-black/50 bg-transparent h-full w-full outline-none border-none px-2 dark:text-white dark:placeholder:text-white/80"
                 placeholder="Search"
               />
               <SearchOutlined className="text-sm text-black/30 p-[0.2rem] dark:text-white" />
-            </div>
+            </div> */}
 
             <button
               className="text-black/70 s500:hidden absolute right-2 dark:text-white/90"
@@ -169,7 +177,7 @@ const Layout = () => {
         )}
 
         {/* DYNAMIC CONTENT */}
-        <div className="dark:bg-slate-900">
+        <div className="dark:bg-slate-900 min-h-screen">
           
         <Outlet />
         </div>
