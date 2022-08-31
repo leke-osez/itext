@@ -30,7 +30,7 @@ const DropOwner = ({drop, likeDrop}) => {
     navigate(`/profile/${drop?.authorId}`)
   }
   return (
-    <div className="flex items-start mb-5">
+    <div className="flex items-start mb-5 dark:text-white/90">
       {/* DROP AVATAR */}
       <div className="w-20 h-5">
         <Avatar src={drop?.avatar} className="avatar" />
@@ -43,22 +43,22 @@ const DropOwner = ({drop, likeDrop}) => {
         <div className="flex items-end mb-3">
           {/* AUTHOR NAME */}
           <div className=" border-r-[.2px] px-1 text-sm" onClick={selectProfile}>
-            <p className=" text-black/90 font-medium    ">
+            <p className=" text-black/90 dark:text-white/90 font-medium    ">
               {drop?.username || drop?.name }
             </p>
-            <p className=" text-black/60 font-medium">
+            {/* <p className=" text-black/60 dark:text-white/90 font-medium">
               @{drop?.authorName || "hammerhead"}
-            </p>
+            </p> */}
           </div>
 
           {/* DROP TIMESTAMP */}
-          <p className=" text-black/60 ml-3 text-sm"><Moment fromNow >{drop?.createdAt.toDate()}</Moment></p>
+          <p className=" text-black/60 ml-3 text-sm dark:text-white/70"><Moment fromNow >{drop?.createdAt.toDate()}</Moment></p>
         </div>
 
         <div className={`flex flex-col w-full `} >
           
           {/* TEXT */}
-          <p className="w-full max-w-[600px] text-base text-black font-medium  mb-4">
+          <p className="w-full max-w-[600px] text-base text-black font-medium  dark:text-white/90 mb-4">
             {drop?.dropText}
           </p>
 

@@ -14,7 +14,7 @@ const CommentBox = ({
   };
   return (
     <div>
-      <p className="text-black/60 text-base">Replying to @<span className="text-textColor italic ">{dropOwner?.username || dropOwner?.name}</span></p>
+      <p className="text-black/60 text-base dark:text-white/70">Replying to @<span className="text-textColor italic ">{dropOwner?.username || dropOwner?.name}</span></p>
       <div className="flex gap-5 items-center">
         <Avatar src={user?.avatar} />
         <TextareaAutosize

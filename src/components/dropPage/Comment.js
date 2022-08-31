@@ -28,7 +28,7 @@ const Comment = ({ comment, likeComment }) => {
     navigate(`/profile/${comment?.author}`)
   }
   return (
-    <div className="flex items-start mb-5 w-full">
+    <div className="flex dark:text-white/90 items-start mb-5 w-full">
       <div className="flex items-start mb-5 w-full">
         {/* DROP AVATAR */}
         <div className="w-20 h-5">
@@ -41,7 +41,7 @@ const Comment = ({ comment, likeComment }) => {
           <div className="flex items-end mb-3 w-full">
             {/* AUTHOR NAME */}
             <div className=" flex gap-[.12rem] border-r-[.2px] text-sm" onClick={selectProfile}>
-            <p className=" text-black/90 font-medium hover:underline cursor-pointer ">
+            <p className=" text-black/90 dark:text-white/90 font-medium hover:underline cursor-pointer ">
               {comment?.name}
             </p>
             {/* <p className=" text-black/60 font-medium hover:underline cursor-pointer">
@@ -51,12 +51,12 @@ const Comment = ({ comment, likeComment }) => {
 
 
             {/* comment TIMESTAMP */}
-            <p className=" text-black/60 ml-3 text-sm"><Moment fromNow >{comment?.createdAt.toDate()}</Moment></p>
+            <p className=" text-black/60 dark:text-white/70 ml-3 text-sm"><Moment fromNow >{comment?.createdAt.toDate()}</Moment></p>
           </div>
 
           <div className={`flex flex-col w-full`}>
             {/* TEXT */}
-            <p className="w-full max-w-[600px] text-base text-black font-medium  mb-4">
+            <p className="w-full max-w-[600px] text-base dark:text-white/90 text-black font-medium  mb-4">
               {comment?.commentText}
             </p>
 
