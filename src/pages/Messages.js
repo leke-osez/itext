@@ -323,7 +323,7 @@ const Messages = () => {
   return (
     <div className="sm:flex  w-full body_screen  s500:h-[100vh]">
       <div
-        className={`sm:w-[35%] w-full sm:border-r-[1px] flex-col gap-3 bg-white  h-full sm:sticky sm:top-0 absolute sm:flex z-[30] ${
+        className={`sm:w-[35%] sm:min-w-[200px] w-full sm:border-r-[1px] dark:border-none flex-col gap-3  dark:bg-slate-800 h-full sm:sticky sm:top-0 absolute sm:flex z-[30] ${
           chatList ? "sm:flex " : "sm:flex hidden"
         }`}
       >
@@ -338,12 +338,12 @@ const Messages = () => {
           <CircularProgress />
         )}
       </div>
-      <div className="sm:relative  flex-1 h-full  w-full absolute">
+      <div className="sm:relative flex flex-col  flex-1 h-full  w-full absolute">
         {chat ? (
           <div className="h-full flex flex-col w-full">
             <nav className="shadow-sm p-2 h-fit flex items-center">
               <button
-                className="sm:hidden mr-1"
+                className="sm:hidden mr-1 dark:text-white/90"
                 onClick={() => setChatList(true)}
               >
                 <ArrowBackIos />
@@ -381,7 +381,7 @@ const Messages = () => {
             </div>
           </div>
         ) : (
-          <p className="w-full h-full text-2xl font-medium text-center mt-10 md:mt-20">
+          <p className="w-full dark:text-white/90 h-full text-2xl font-medium text-center mt-10 md:mt-20">
             Select a user to start a conversation
           </p>
         )}

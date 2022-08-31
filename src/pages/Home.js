@@ -49,7 +49,7 @@ const Home = () => {
 
   
   return(
-    <div className="">
+    <div className="dark:slate-900">
       <div className=" flex flex-col ">
         <div className = 'mb-[4rem]'>
           <DropsBox user = {userProfile} />

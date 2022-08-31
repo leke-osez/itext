@@ -104,7 +104,7 @@ const DropsBox = () => {
   // TODO: CLEANSE INPUT AND HANDLE ERRORS;
 
   return (
-    <div className="w-full px-4 py-4 flex justify-center">
+    <div className="w-full dark:bg-slate-900 px-4 py-4 flex justify-center">
       {/* AVATAR */}
       <AvatarContainer user={user} />
 
@@ -133,7 +133,7 @@ const DropsBox = () => {
             
           <TextareaAutosize
             minRows={3}
-            className="border-[.2px] border-black/20 rounded-md p-2 md:p-4 w-[90%] max-w-[300px] md:flex-1 min-w-[100px] sm:max-w-[400px]"
+            className="dark:bg-slate-700 dark:text-white border-[.2px] border-black/20 rounded-md p-2 md:p-4 w-[90%] max-w-[300px] md:flex-1 min-w-[100px] sm:max-w-[400px]"
             placeholder="Compose drop..."
             onChange={handleChangeText}
             value={dropText}

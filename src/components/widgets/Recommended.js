@@ -16,8 +16,8 @@ const Recommended = () => {
     };
   };
   return (
-    <div className="w-full bg-slate-200/60 rounded-md p-2">
-      <p className="text-sm mb-3">Recommended</p>
+    <div className="w-full dark:bg-slate-700 bg-slate-200/60 rounded-md p-2">
+      <p className="text-sm mb-3 dark:text-white/90">Recommended</p>
 
       {/* RECOMMENDATIONS */}
       <div className="flex flex-col gap-3">
@@ -27,7 +27,7 @@ const Recommended = () => {
               <div className="flex gap-3">
                 <Avatar src={user.avatar} className="recommended__avatar" />
                 <p
-                  className="text-black/70 text-base hover:underline cursor-pointer"
+                  className="text-black/70 dark:text-white/70 text-base hover:underline cursor-pointer"
                   onClick={() => navigate(`/profile/${user.uid}`)}
                 >
                   {user.name}

@@ -1,6 +1,11 @@
 import { TextareaAutosize } from '@mui/material'
 import React, { useState } from 'react';
 import { CameraAlt } from '@mui/icons-material';
+import {
+
+  UilMessage,
+
+} from "@iconscout/react-unicons";
 
 const MessageForm = ({handleSubmit, handleChange, value, handleChangePhoto}) => {
     const [img, setImg] = useState({
@@ -18,7 +23,7 @@ const MessageForm = ({handleSubmit, handleChange, value, handleChangePhoto}) => 
     <form onSubmit={handleSend}>
 
     <div className='flex gap-2 items-end  w-full md:w-[500px]'>
-            <label htmlFor='messagePic'><CameraAlt className = 'upload_image' /></label>
+            <label htmlFor='messagePic'><CameraAlt className = 'upload_image dark:text-white/90' /></label>
             <input
                 style={{display: 'none'}}
                 type = 'file'
@@ -37,7 +42,7 @@ const MessageForm = ({handleSubmit, handleChange, value, handleChangePhoto}) => 
             value = {value}
         />
         </div>
-        <button className='bg-green-400 text-white rounded-md sm:px-3 sm:py-2 px-1 py-1 text-base' onClick={handleSend}>Send</button>
+        <button className='bg-green-400 text-white rounded-md sm:px-3 sm:py-2 px-1 py-1 text-base' onClick={handleSend}><UilMessage/></button>
     </div>
     </form>
 

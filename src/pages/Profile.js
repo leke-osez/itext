@@ -172,11 +172,11 @@ const Profile = ({ image }) => {
   }, [])
   if (profile) {
     return (
-      <div>
+      <div className="dark:text-white/90 ">
         <ProfilePic AVI={profile?.avatar} bgImgURL={profile?.bgImg} />
         {userId === auth.currentUser?.uid ? (
           <button
-            className="mt-2 px-2 text-base  rounded-full border-black/70 border-[.05rem] float-right md:font-medium mr-3"
+            className="mt-2 px-2 dark:border-white/90 text-base  rounded-full border-black/70 border-[.05rem] float-right md:font-medium mr-3"
             onClick={() => {
               setEditModal(true);
             }}
@@ -184,13 +184,13 @@ const Profile = ({ image }) => {
             Edit Profile
           </button>
         ) : (
-          <span className="float-right mt-2 flex items-center gap-2">
+          <span className="float-right mt-2 flex items-center gap-2 ">
             <button onClick={sendMessage}>
               <UilEnvelope />
             </button>
             {!isFollowing() ? (
               <button
-                className=" px-2 text-base bg-black text-white rounded-full  border-[.05rem] mr-3"
+                className=" px-2 text-base bg-black text-white rounded-full  border-[.05rem] mr-3 "
                 onClick={() => handleFollow(profile?.uid)}
               >
                 Follow
@@ -227,7 +227,7 @@ const Profile = ({ image }) => {
             </div>
 
             {/* DATE JOINED */}
-            <p className="text-black/70 mb-2 font-semibold mt-3">
+            <p className="text-black/70 dark:text-white/80 mb-2 font-semibold mt-3">
               Joined{" "}
               <span className="text-sm font-normal">
                 {profile?.createdAt?.toDate()?.toDateString()}
@@ -237,11 +237,11 @@ const Profile = ({ image }) => {
             <div className="flex gap-2">
               <button className="flex gap-1">
                 {profile?.following?.length}{" "}
-                <p className="text-black/70">Following</p>
+                <p className="text-black/70 dark:text-white/70">Following</p>
               </button>
               <button className="flex gap-1">
                 {profile?.followers?.length}{" "}
-                <p className="text-black/70">Followers</p>
+                <p className="text-black/70 dark:text-white/70">Followers</p>
               </button>
             </div>
           </div>

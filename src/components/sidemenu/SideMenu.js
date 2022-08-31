@@ -40,10 +40,10 @@ const SideMenu = () => {
   }, [userProfile]);
   console.log('test')
   return (
-    <div className="relative  w-full  rounded-t-[2rem] s500:h-screen  s500:rounded-none s500:sticky s500:top-0 bottom-0  border-r-[.3px] bg-white">
+    <div className="relative dark:bg-slate-800 dark:text-white/90 transition duration-50  w-full  rounded-t-[2rem] s500:h-screen  s500:rounded-none s500:sticky s500:top-0 bottom-0  border-r-[.3px] dark:border-white/40 dark:border-none bg-white">
 
       {/* header */}
-      <div className="border-b hidden s500:flex gap-3 items-center py-2 px-2 h-[3.5rem]">
+      <div className="border-b dark:border-white/40 dark:border-b-[.05rem] dark:bg-slate-600 hidden  s500:flex gap-3 items-center py-2 px-2 h-[3.5rem]">
 
         {/* logo */}
         <div className="">
@@ -70,22 +70,22 @@ const SideMenu = () => {
 
 
         {/* ACCOUNTS  */}
-        <div className = 'relative hidden s500:flex gap-7 items-center w-fit md:ml-9 md:hover:bg-slate-400/40 py-2  px-2 md:rounded-full justify-between cursor-pointer' onClick={showAcctMenu}>
+        <div className = ' relative hidden s500:flex gap-7 items-center w-fit md:ml-9 md:hover:bg-slate-400/40 py-2  px-2 md:rounded-full justify-between cursor-pointer' onClick={showAcctMenu}>
           
           <span className="flex items-center">
             <Avatar src={userProfile ? userProfile.avatar : ""} />
-            <p className="text-lg text-black/70 md:flex hidden ml-2">
+            <p className="text-lg text-black/70 dark:text-white/90 md:flex hidden ml-2">
               {userProfile?.name}
             </p>
 
           </span>
-          <span className="hidden md:flex"><UilEllipsisH className = 'text-black/70 '/></span>
+          <span className="hidden md:flex"><UilEllipsisH className = 'text-black/70 dark:text-white/90'/></span>
 
           {/* ACCT MENU */}
           {
             acctMenu && (
-              <div className="absolute bottom-[100%] px-4 py-4 bg-white shadow-md min-w-[120px] rounded-md cursor-text">
-                <button className="flex gap-1 text-sm items-center cursor-pointer" onClick = {()=>{setAcctMenu(false); setSignOutModal(true)}}>Sign Out <UilSignOutAlt className = 'text-textColor w-5 h-5'/></button>
+              <div className="dark:bg-slate-600 absolute bottom-[100%] px-4 py-4 bg-white shadow-md min-w-[120px] rounded-md cursor-text">
+                <button className="flex gap-1 text-sm items-center cursor-pointer " onClick = {()=>{setAcctMenu(false); setSignOutModal(true)}}>Sign Out <UilSignOutAlt className = 'text-textColor w-5 h-5'/></button>
               </div>
             )
           }

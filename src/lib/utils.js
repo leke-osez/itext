@@ -1,4 +1,4 @@
-import { db } from "../lib/firebase";
+import { db, auth } from "../lib/firebase";
 import React from "react";
 import {
   getDoc,
@@ -10,6 +10,8 @@ import {
   onSnapshot,
   deleteDoc,
 } from "firebase/firestore";
+import { signOut } from "firebase/auth";
+import {useNavigate } from "react-router-dom";
 
 export const handleFollow = async (id, userProfile, setAction = () => {}) => {
   const batch = writeBatch(db);
@@ -66,7 +68,7 @@ export const getDrops = async (countRef, setDrops, q, location, profContents) =>
 
     }
     docs.forEach((document) => {
-      console.log('in loop')
+     
       // if (tracker === 0 && !document.data()){
 
       // }
@@ -149,3 +151,4 @@ export const deleteDropFromDB = async (id)=>{
   const docRef = doc(db, 'drop', id)
   await deleteDoc(docRef)
 } 
+

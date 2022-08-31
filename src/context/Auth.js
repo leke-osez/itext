@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { auth, db } from "../lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut, deleteUser  } from "firebase/auth";
 import Loading from "../components/Loading";
 import { doc, getDoc, limit, query, updateDoc } from "firebase/firestore";
 import {collection, getDocs, where} from 'firebase/firestore';
@@ -46,11 +46,23 @@ export const AuthProvider = ({ children }) => {
   //DROPS
   const [drops, setDrops] = useState(null);
   const [activeDrop, setActiveDrop] = useState(null)
+  const [dropMenuOpen, setDropMenuOpen] = useState(false)
+
 
   // USER RECOMMENDATIONS
   const [userRecommendations, setUserRecommendations] = useState([]);
 
-  const [dropMenuOpen, setDropMenuOpen] = useState(false)
+  const checkThemeMode = ()=>{
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)){
+      return 'dark'
+    } else{
+      return 'light'
+    }
+  }
+
+  const [themeMode, setThemeMode]  = useState( checkThemeMode());
+
+  const [accountDeleteModal, setDeleteAccountModal] = useState(false)
 
   const value = {
     user, setUser, 
@@ -71,7 +83,9 @@ export const AuthProvider = ({ children }) => {
     unreadMsgs, setUnreadMsgs,
     msgs, setMsgs,
     navMenu, setNavMenu,
-    setDropMenuOpen, dropMenuOpen
+    setDropMenuOpen, dropMenuOpen,
+    themeMode, setThemeMode,
+    accountDeleteModal, setDeleteAccountModal
   };
 
   // HANDLE AUTHENTICATION
@@ -101,9 +115,9 @@ export const AuthProvider = ({ children }) => {
 
   })
 
+    // GET USER RECOMMENDATIONS
   useEffect(() => {
 
-    // GET USER RECOMMENDATIONS
     const getRecommendations = async()=>{
     try{
         const recommendations = []
@@ -126,6 +140,15 @@ export const AuthProvider = ({ children }) => {
     };
   }, [user]);
 
+
+  // LISTEN FOR THEME CHANGES
+  useEffect(()=>{
+    if (themeMode === 'dark'){
+      document.documentElement.classList.add('dark')
+    }else{
+      document.documentElement.classList.remove('dark')
+    }
+  }, [themeMode])
   const logout = (ev) => {  
     ev.preventDefault();
       

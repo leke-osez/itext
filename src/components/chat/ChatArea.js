@@ -24,7 +24,7 @@ const ChatArea = ({msgs,user1}) => {
 
 
   return (
-    <div className="flex-1  w-full overflow-auto border-b-2 px-3 py-2 xl:px-7 ">
+    <div className="flex-1  w-full overflow-auto border-b-2 dark:border-b-[.2px]  dark:border-white/40 px-3 py-2 xl:px-7 ">
     
     {
       msgs?.map((msg, i)=>(

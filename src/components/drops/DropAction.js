@@ -7,9 +7,9 @@ const DropAction = ({DropIcon, text, handleClick, isLiked}) => {
   }
 
   return (
-    <button className={`flex font-thin gap-1 `} onClick = {onClick}>
+    <button className={`flex font-thin gap-1 dark:text-white/90`} onClick = {onClick}>
         <DropIcon className = {`drop__icon ${isLiked ? 'text-pink-500': ''}`}/>
-        <p className='text-base text-black/70'>{text}</p>
+        <p className='text-base text-black/70 dark:text-white/90'>{text}</p>
     </button>
   )
 }

@@ -62,6 +62,7 @@ const Drops = () => {
 
   useEffect(() => {
     const getDrops = async () => {
+      console.log('test drops')
     const drops = {}
       try {
         

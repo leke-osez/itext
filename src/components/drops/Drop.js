@@ -76,7 +76,7 @@ const Drop = ({ drop, likeDrop, drops }) => {
     setDrops(drops.filter((dropToDelete)=> dropToDelete.id !== drop.id))
   }
   return (
-    <div className="flex items-start mb-5 ">
+    <div className="flex items-start mb-5 dark:text-white/90">
       {/* DROP AVATAR */}
       <div className="w-20 h-5">
         <Avatar src={drop?.avatar} className="avatar" />
@@ -89,10 +89,10 @@ const Drop = ({ drop, likeDrop, drops }) => {
           <div className="flex items-end mb-1">
             {/* AUTHOR NAME */}
             <div
-              className=" flex gap-[.12rem] border-r-[.2px] text-sm"
+              className=" flex gap-[.12rem] pr-2 border-r-[.2px] dark:border-white/40 dark:border-r-[.05rem] text-sm"
               onClick={selectProfile}
             >
-              <p className=" text-black/90 font-medium hover:underline cursor-pointer ">
+              <p className=" dark:text-white/90 text-black/90 font-medium hover:underline cursor-pointer ">
                 {drop?.name}
               </p>
               {/* <p className=" text-black/60 font-medium hover:underline cursor-pointer">
@@ -102,7 +102,7 @@ const Drop = ({ drop, likeDrop, drops }) => {
 
             {/* DROP TIMESTAMP */}
 
-            <p className=" text-black/60 ml-3 text-sm">
+            <p className=" text-black/60 ml-3 text-sm dark:text-white/60">
               <Moment fromNow>{drop?.createdAt.toDate()}</Moment>
             </p>
           </div>
@@ -122,12 +122,12 @@ const Drop = ({ drop, likeDrop, drops }) => {
 
         <div
           className={`flex flex-col w-full  cursor-pointer hover:bg-slate-400/20 ml-2 ${
-            drop?.dropFilePath?.length && "border-[.2px] rounded-lg"
+            drop?.dropFilePath?.length && "border-[.2px] dark:border-white/40   dark:border-t-[0.5px] rounded-lg"
           }`}
           onClick={openDrop}
         >
           {/* TEXT */}
-          <p className="w-full  text-base text-black font-medium  mb-4">
+          <p className="w-full  text-base text-black font-medium dark:font-normal  mb-4 dark:text-white/90">
             {drop?.dropText}
           </p>
 
@@ -187,7 +187,7 @@ const Drop = ({ drop, likeDrop, drops }) => {
           </div>
 
           {/* DROP ACTIONS */}
-          <div className="border-t-[.1px] flex justify-center gap-10 font-thin w-full">
+          <div className={`border-t-[.1px] rounded-b-lg dark:border-white/40 dark:border-[.05rem] flex justify-center gap-10 font-thin w-full ${drop?.dropFilePath?.length && 'border-none'}`}>
             <DropAction
               DropIcon={UilHeartAlt}
               text={drop?.likes.length}

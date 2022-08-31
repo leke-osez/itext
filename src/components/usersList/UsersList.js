@@ -7,13 +7,13 @@ const UsersList = ({ users, selectUser, user1 }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="body_screen bg-white w-full">
+    <div className="body_screen dark:text-white/90 bg-white dark:bg-slate-800 dark:border-l-[0.2px] dark:border-white/40 w-full">
       <div className="flex justify-center w-full h-[3.5rem] items-center">
-      <button onClick={()=>navigate(-1)} className = 'absolute left-2 text-black/60 '><ArrowBackIos className=""/></button>
-        <p className="text-lg font-semibold text-center">Chats</p>
+      <button onClick={()=>navigate(-1)} className = 'absolute left-2 dark:text-white/80 text-black/60 '><ArrowBackIos className=""/></button>
+        <p className="text-lg font-semibold text-center dark:text-white/90">Chats</p>
       </div>
       <div className="overflow-y-auto overflow-x-hidden">
-        <div className="w-full px-2">
+        <div className="w-full px-2 dark:text-white/90">
           {!users.length ? (
             <p>No chats yet...</p>
           ) : (

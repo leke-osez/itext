@@ -33,22 +33,22 @@ const User = ({ profile, selectedUser, isUserList, user1 }) => {
     <div
       className={`w-full flex items-center gap-4  cursor-pointer  ${
         isUserList && "sm:px-4 py-2 mb-3 items-start"
-      } ${chat?.uid === user2 && isUserList ? "bg-slate-600/10" : ""}`}
+      } ${chat?.uid === user2 && isUserList ? "bg-slate-600/10 dark:bg-slate-700" : ""}`}
       onClick={selectedUser ? selectUser : null }
     >
       <Avatar src={avatar} className="usersAvatar" />
       <div className="flex flex-col w-full">
         <div className="flex items-center gap-3">
-          <p className="md:text-[1rem] text-base">{name}</p>
+          <p className="md:text-[1rem]  dark:text-white/90 text-base">{name}</p>
           {isOnline && (
             <div className="h-[.4rem] aspect-square rounded-full bg-green-500 p-0"></div>
           )}
         </div>
         {data && (
-          <div className=" bg-green flex w-full  ">
+          <div className=" bg-green flex w-full dark:text-white/90 ">
             {/* <p className="mr-1">{data.from === user1 ? "You:  " : null}</p> */}
-            <p className="truncate  text-black/60 xl:w-[80%] md:w-[70%] w-[60%]">
-              {data.from === user1 ? "You:  " : null}
+            <p className="truncate dark:text-white/90 text-black/60 xl:w-[80%] md:w-[70%] w-[60%]">
+              <span></span>
               {data.lastMsg ? (
                 data.lastMsg
               ) : (
