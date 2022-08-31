@@ -107,12 +107,12 @@ const Drop = ({ drop, likeDrop, drops }) => {
             </p>
           </div>
           <div className="relative">
-            <button className="text-black/50 " onClick={showDropMenu}>
+            <button className="text-black/50 dark:text-white/90" onClick={showDropMenu}>
               <UilEllipsisH />
             </button>
 
             {drop?.menuActive && dropMenuOpen && (
-              <div className="absolute top-[100%] z-[10] bg-white shadow-lg right-[0] p-3 flex flex-col gap-1 w-[170px] text-base">
+              <div className="absolute top-[100%] z-[10] bg-white dark:bg-slate-800 shadow-lg right-[0] p-3 flex flex-col gap-1 w-[170px] text-base">
                 <div className="" onClick = {()=>navigate(`profile/${drop.authorId}`)}>View profile</div>
                 {drop.authorId === userProfile.uid && <div onClick={deleteDrop}>Delete drop</div>}
               </div>
