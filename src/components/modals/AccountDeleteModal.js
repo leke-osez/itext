@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { auth, db } from "../../lib/firebase";
-import { doc, query, updateDoc, where, writeBatch } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc, where, writeBatch } from "firebase/firestore";
 import { deleteUser } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useStateAuth } from "../../context/Auth";
@@ -17,28 +17,38 @@ const [loading, setLoading] = useState(false)
 
  }
   const deleteAccount= async()=>{
+    setLoading(true);
+    const getAllUserDrops = await getDocs(query(collection(db,'drop'), where('authorId','==', userProfile.uid)))
+
     try {
-        setLoading(true);
-        deleteUser(auth.currentUser).then(()=>{
-            const batch = writeBatch(db);
+        const batch = writeBatch(db);
 
             batch.delete(doc(db, 'users', userProfile.uid))
             batch.delete(doc(db, 'notification', userProfile.uid))
             batch.delete(doc(db, 'chatList', userProfile.uid))
-            batch.delete(query(doc(db, 'drop',), where('authorId','==', userProfile.uid)))
+            if (!getAllUserDrops.empty){getAllUserDrops.forEach(drop=>{
+                batch.delete(doc(db, 'drop', drop.data().id))
+            })}
             batch.delete(doc(db, 'lastMsg', userProfile.uid))
 
             batch.commit().then(()=>{
-                setDeleteAccountModal(false)
+                deleteUser(auth.currentUser).then(()=>{
+            
+                }).catch((e)=>{
+                    console.log(e)
+                    setLoading(false)
+                    setReauthModal(true)
+                })
+                setDeleteAccountModal(false);
+                setReauthModal(false)
                 setAppUsers(null);
                 setUserProfile(null);
                 setAcctMenu(null);
                 navigate("/signin", { replace: true }); 
             })
             
-        }).catch(()=>{
-            setReauthModal(true)
-        })
+       
+        
 
     } catch (error) {
         console.log(error)

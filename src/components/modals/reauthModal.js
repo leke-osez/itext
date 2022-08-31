@@ -1,7 +1,5 @@
-import React, { useState,  } from "react";
-import {
-  reauthenticateWithCredential as reauth
-} from "firebase/auth";
+import React, { useState } from "react";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import CircularProgress from "@mui/material/CircularProgress";
 import { auth, db } from "../../lib/firebase";
 import { setDoc, doc, Timestamp, updateDoc } from "firebase/firestore";
@@ -9,7 +7,7 @@ import logo from "../../assets/img/logo3.png";
 import { useStateAuth } from "../../context/Auth";
 
 const ReauthModal = ({ signUp }) => {
-    const {setReauthModal} = useStateAuth()
+  const { setReauthModal } = useStateAuth();
   const initialState = {
     email: "",
     password: "",
@@ -17,19 +15,27 @@ const ReauthModal = ({ signUp }) => {
     error: false,
   };
   const [data, setData] = useState(initialState);
- 
+
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
-  
-  const handleReauth = async()=>{
-    reauth(auth.currentUser, email, password).then(()=>{
-        setReauthModal(false)
-    }).catch((error)=>console.log(error))
-  }
-  
+
+  const handleReauth = async (e) => {
+    e.preventDefault()
+    const cred = EmailAuthProvider.credential(email, password);
+    try {
+      reauthenticateWithCredential(auth.currentUser, cred)
+        .then(() => {
+            setReauthModal(false)
+        })
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // destructuring object -- data
-  const {  email, password, error, loading } = data;
+  const { email, password, error, loading } = data;
 
   return (
     <div
@@ -37,13 +43,9 @@ const ReauthModal = ({ signUp }) => {
         loading ? "bg-black/5" : ""
       }`}
     >
-
       {/* Authentication form */}
       <div className="w-[45%] p-0 h-full ">
-        <form
-          className="w-full flex justify-center items-center md:mt-10"
-          
-        >
+        <form className="w-full flex justify-center items-center md:mt-10">
           <div className="flex flex-col items-center gap-2 md:gap-3 h-fit min-w-[250px] w-full md:w-[90%] rounded-lg md:px-2  py-3 md:p-3 bg-inherit auth_form">
             {/* App Logo */}
             <div>
@@ -55,7 +57,6 @@ const ReauthModal = ({ signUp }) => {
             </h2>
 
             <div className="flex flex-col items-center gap-3 md:gap-5 mb-7 text-start w-full">
-
               <div className="flex flex-col w-[100%] ">
                 <div>
                   <label htmlFor="email">
@@ -71,7 +72,6 @@ const ReauthModal = ({ signUp }) => {
                   type="email"
                   onChange={handleChange}
                   value={email}
-                  
                 />
               </div>
 
@@ -94,9 +94,9 @@ const ReauthModal = ({ signUp }) => {
               </div>
             </div>
             {error && <p className="text-red-700">{error}</p>}
-       
+
             <button
-              onSubmit={handleReauth}
+              onClick={handleReauth}
               disabled={loading}
               className="bg-[#fca120] text-[1.2rem] w-full py-2 font-bold text-white rounded-[.5rem] max-w-[200px]"
             >
