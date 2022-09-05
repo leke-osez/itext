@@ -12,6 +12,15 @@ State Management, UI rendering, Caching and so on.
 Firebase handles the server-side infastructure, such as:
 Authentication, Database management, CRUD operations, Realtime client updates with database listeners, Storage etc. basically all operations you would normally do on the backend which is super-awesome!!!
 
+## FEATURES
+- Authentication (Sign in and Sign up) with email and password.
+- Messaging feature with realtime update for both sender and recipient.
+- Post creation and deletion.
+- Comment 
+- Like and Follow engagement feature
+- Profile update - set profile picture, bio and name 
+- Settings feature - set theme mode (dark or light), delete account
+
 ## INSTALLATION GUIDE
 1. Go ahead and clone this repo to your local machine.
 2. Make sure you have node installed.
