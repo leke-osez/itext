@@ -1,5 +1,5 @@
 # Trickle - The Social media app
-FKA itext because it was originally intended to be just a chat app but i blew it out of proportion, I'm sorry
+FKA itext because it was originally intended to be just a chat app but i blew it out of proportion, I'm sorry <br>
 Side gist - The name trickle was birthed by my kid sis which represents a drop of water so the whole app plays on the name.
 
 ## DESCRIPTION
