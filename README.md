@@ -20,11 +20,11 @@ Authentication, Database management, CRUD operations, Realtime client updates wi
 5. When done creating your .env file, you environment variables would contain your Firebase configurations
    Create a new project on Firebase, the instruction for that is out of the scope of this, but the instrucitons firebase gives in the doc is pretty easy.
 6. Now in your __.env__ file; ADD the following variables
-   __REACT_APP_API_KEY__ is your apiKey
-   __REACT_APP_PROJECT_ID__ is your projectId
-   __REACT_APP_DATABASE_URL__ is your database URL
-   __REACT_APP_STORAGE_BUCKET__ is your storageBucket
-   __REACT_APP_MESSAGING_SENDER_ID__ is your messagingSenderId
+   __REACT_APP_API_KEY__ is your apiKey <br>
+   __REACT_APP_PROJECT_ID__ is your projectId <br>
+   __REACT_APP_DATABASE_URL__ is your database URL <br>
+   __REACT_APP_STORAGE_BUCKET__ is your storageBucket <br>
+   __REACT_APP_MESSAGING_SENDER_ID__ is your messagingSenderId <br>
    __REACT_APP_APP_ID__ is your appId
 7. now RUN `npm start`
 
