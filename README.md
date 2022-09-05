@@ -10,7 +10,7 @@ ReactJS handles all the client-side functionalities like:
 State Management, UI rendering, Caching and so on.
 
 Firebase handles the server-side infastructure, such as:
-Authentication, Database management, CRUD operations, Realtime client updates with database listeners, Storage etc. basically all operartions you would normally do on the backend which is super-awesome!!!
+Authentication, Database management, CRUD operations, Realtime client updates with database listeners, Storage etc. basically all operations you would normally do on the backend which is super-awesome!!!
 
 ## INSTALLATION GUIDE
 1. Go ahead and clone this repo to your local machine.
