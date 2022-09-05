@@ -1,5 +1,5 @@
 # Trickle - The Social media app
-(FKA itext because it was originally intended to be just a chat app but i blew it out of proportion, I'm sorry)
+FKA itext because it was originally intended to be just a chat app but i blew it out of proportion, I'm sorry
 Side gist - The name trickle was birthed by my kid sis which represents a drop of water so the whole app plays on the name.
 
 ## DESCRIPTION
@@ -15,7 +15,7 @@ Authentication, Database management, CRUD operations, Realtime client updates wi
 ## INSTALLATION GUIDE
 1. Go ahead and clone this repo to your local machine.
 2. Make sure you have node installed.
-3. On your command line type and run ### `npm install` to install all dependencies.
+3. On your command line type and run `npm install` to install all dependencies.
 4. This project uses some environment variables so create a __.env__ file
 5. When done creating your .env file, you environment variables would contain your Firebase configurations
    Create a new project on Firebase, the instruction for that is out of the scope of this, but the instrucitons firebase gives in the doc is pretty easy.
@@ -26,7 +26,7 @@ Authentication, Database management, CRUD operations, Realtime client updates wi
    __REACT_APP_STORAGE_BUCKET__ is your storageBucket
    __REACT_APP_MESSAGING_SENDER_ID__ is your messagingSenderId
    __REACT_APP_APP_ID__ is your appId
-7. now RUN ### `npm start`
+7. now RUN `npm start`
 
 That is all you need to run the project 
 
