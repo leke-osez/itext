@@ -1,8 +1,8 @@
-#Trickle - The Social media app
+# Trickle - The Social media app
 (FKA itext because it was originally intended to be just a chat app but i blew it out of proportion, I'm sorry)
 Side gist - The name trickle was birthed by my kid sis which represents a drop of water so the whole app plays on the name.
 
-##DESCRIPTION
+## DESCRIPTION
 Trickle is a social media app built with the awesome tag team: __REACTJS__, __TailwindCSS__ and __Firebase__.
 It leverages on React code reusablility and Firebase rapid server-side development.
 
@@ -12,7 +12,7 @@ State Management, UI rendering, Caching and so on.
 Firebase handles the server-side infastructure, such as:
 Authentication, Database management, CRUD operations, Realtime client updates with database listeners, Storage etc. basically all operartions you would normally do on the backend which is super-awesome!!!
 
-##INSTALLATION GUIDE
+## INSTALLATION GUIDE
 1. Go ahead and clone this repo to your local machine.
 2. Make sure you have node installed.
 3. On your command line type and run ### `npm install` to install all dependencies.
@@ -30,7 +30,7 @@ Authentication, Database management, CRUD operations, Realtime client updates wi
 
 That is all you need to run the project 
 
-##SOFT CAUTION
+## SOFT CAUTION
 My idea of this app was for testing and fun purposes so when writing an ideal app for commercial purposes, you will want to move your CRUD operations to a cloud function on the server-side, and query by some sort of routing although this is still sufficient.
    
 
