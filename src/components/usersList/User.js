@@ -31,14 +31,14 @@ const User = ({ profile, selectedUser, isUserList, user1 }) => {
   }, []);
   return (
     <div
-      className={`w-full flex items-center gap-4  cursor-pointer  ${
+      className={`w-full flex items-start gap-4  cursor-pointer  ${
         isUserList && "sm:px-4 py-2 mb-3 items-start"
       } ${chat?.uid === user2 && isUserList ? "bg-slate-600/10 dark:bg-slate-700" : ""}`}
       onClick={selectedUser ? selectUser : null }
     >
       <Avatar src={avatar} className="usersAvatar" />
       <div className="flex flex-col w-full">
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-3">
           <p className="md:text-[1rem]  dark:text-white/90 text-base">{name}</p>
           {isOnline && (
             <div className="h-[.4rem] aspect-square rounded-full bg-green-500 p-0"></div>

@@ -97,7 +97,7 @@ const Drops = () => {
   }, []);
   
   return (
-    <div className="flex flex-col gap-2 p-3">
+    <div className="flex flex-col gap-2 sm:py-6 p-3">
       {drops ? <DropsList drops = {drops} likeDrop = {likeDrop}/> : <CircularProgress/>}
     </div>
   );
