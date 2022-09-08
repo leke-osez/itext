@@ -323,7 +323,7 @@ const Messages = () => {
   return (
     <div className="sm:flex  w-full body_screen  s500:h-[100vh]">
       <div
-        className={`sm:w-[35%] sm:min-w-[200px] w-full sm:border-r-[1px] dark:border-none flex-col gap-3  dark:bg-slate-800 h-full sm:sticky sm:top-0 absolute sm:flex z-[30] ${
+        className={`w-full s500:w-[40%]  md:w-[35%] sm:border-r-[1px] dark:border-none flex-col gap-3  dark:bg-slate-800 h-full  sm:top-0  sm:flex z-[30] ${
           chatList ? "sm:flex " : "sm:flex hidden"
         }`}
       >
@@ -338,7 +338,7 @@ const Messages = () => {
           <CircularProgress />
         )}
       </div>
-      <div className="sm:relative flex flex-col  flex-1 h-full  w-full absolute">
+      <div className="  flex flex-col  h-full w-full s640:w-[60%]  md:w-[65%] ">
         {chat ? (
           <div className="h-full flex flex-col w-full">
             <nav className="shadow-sm p-2 h-fit flex items-center">

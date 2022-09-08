@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   doc,
   getDoc,
@@ -10,7 +10,9 @@ import {
   Timestamp,
   orderBy,
   setDoc,
-  updateDoc
+  updateDoc,
+  getDocs,
+  limit
 } from "firebase/firestore";
 import {
   ref,
@@ -33,11 +35,10 @@ const Home = () => {
   const user1 = auth.currentUser.uid;
 
   // states
-  const { userProfile, setUserProfile, } = useStateAuth();
+  const { userProfile, setUserProfile, dropTracker} = useStateAuth();
+  const countRef = useRef(0)
   const navigate = useNavigate()
-
- 
-
+  const { drops, setDrops } = useStateAuth();
 
   useEffect(() => {
     if(!userProfile){getDoc(doc(db, "users", auth.currentUser.uid)).then((docsnap) => {
@@ -47,7 +48,40 @@ const Home = () => {
     });}
   }, []);
 
-  
+  useEffect(() => {
+    const getDrops = async () => {
+    const drops = {}
+      try {
+        
+        const q = query(collection(db, "drop"),orderBy('createdAt','desc'), limit(20))
+        const docs = await getDocs(q);
+        docs.forEach((document) => {
+            const data = document.data();
+            drops[document.id] = {...data,id:document.id};
+            const authorRef = doc(db, "users", data.authorId)
+            getDoc(authorRef).then((userDoc)=>{
+                const authorData = userDoc.data()
+                drops[document.id].name = authorData.name;
+                drops[document.id].avatar = authorData.avatar;
+                countRef.current = countRef.current + 1
+                if (countRef.current === dropsArray.length){
+                  setDrops(dropsArray)
+
+                }
+            })
+    
+        });
+
+        var dropsArray = Object.values(drops) 
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    
+     getDrops();
+    
+  }, [dropTracker]);
   return(
     <div className="dark:slate-900">
       <div className=" flex flex-col ">

@@ -66,7 +66,7 @@ const Layout = () => {
     setNavMenu(false);
   };
   return (
-    <div className="flex" onClick={pageHandler}>
+    <div className="flex overflow-x-hidden" onClick={pageHandler}>
       {navMenu && (
         <div className="bg-black/70 fixed s500:hidden top-0 bottom-0 left-0 right-0 z-[60]"></div>
       )}
@@ -112,12 +112,14 @@ const Layout = () => {
       )}
 
       {/* PAGE LAYOUT */}
+      {/*Menu Large devices */}
       <div
-        className={` s500:sticky hidden left-0 right-0 s500:top-0  s500:flex s500:w-fit md:w-[23%] s500:min-w-fit z-[40]`}
+        className={` s500:relative hidden left-0 right-0 s500:top-0  s500:flex s500:w-fit md:w-[23%] s500:min-w-fit z-[40]`}
       >
         <SideMenu />
       </div>
 
+        {/*Menu Mobile devices */}
       {
         <div
           className={` s500:hidden nav__menu   right-0 s500:top-0 '-bottom-[6rem]' s500:w-fit md:w-[23%] s500:min-w-fit z-[100] ${

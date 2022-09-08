@@ -1,4 +1,4 @@
-import { CircularProgress, TextareaAutosize, TextField } from "@mui/material";
+import { CircularProgress, createTheme, TextareaAutosize, TextField, ThemeProvider } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ProfilePic from "./ProfilePic";
 import { storage, db, auth } from "../../lib/firebase";
@@ -14,10 +14,22 @@ import { useStateAuth } from "../../context/Auth";
 const EditModal = ({ image,  }) => {
   const [pic, setPic] = useState(image ? image : "");
 
-  const {  setUserProfile, userProfile, setProfile:sendProfile, setEditModal } = useStateAuth();
+  const {  setUserProfile, userProfile, setProfile:sendProfile, setEditModal, themeMode } = useStateAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(true);
+
+  // MUI COLOR PALETTE
+  const theme = createTheme({
+    palette: {
+     
+      text: {
+        secondary: themeMode === 'dark' ? '#fff' : 'black',
+        primary: themeMode === 'dark' ? '#fff' : 'black'
+      },
+     
+    },
+  });
 
   // hold previous state where state gets cleared
   const [prevprofile, setPrevProfile] = useState({
@@ -221,7 +233,7 @@ const EditModal = ({ image,  }) => {
     }, [pic,]);
 
   return (
-    <div className="w-full bg-white sm:w-[25rem] md:w-[30rem] py-4 md:px-3 bg-white ">
+    <div className="w-full bg-white sm:w-[25rem] md:w-[30rem] py-4 md:px-3 dark:bg-slate-900 dark:text-white">
       <ProfilePic
         setProfile 
         AVI={prevavatar}
@@ -249,20 +261,25 @@ const EditModal = ({ image,  }) => {
       {/* EDIT PROFILE FIELDS */}
       <div className="w-full flex flex-col items-center">
         <div>
-          <div className="mt-[4rem] mb-3">
+          <div className="mt-[4rem] mb-3 ">
+            <ThemeProvider theme={theme}>
+
             <TextField
               type="text"
               name="name"
               label="Name"
               value={name}
               onChange={handleChange}
-            />
+              color = {''}
+              sx={{color: themeMode === 'dark' ? 'text.secondary' : 'text.light',  }}
+              />
+            </ThemeProvider>
             {!isValid && <p className="text-red-800">Name field cannot be empty</p>}
           </div>
           <div>
             <p className="font-semibold">Bio</p>
 
-            <div className="border-2 w-fit p-2">
+            <div className="border-2 dark:border-[.2px] w-fit p-2 dark:bg-slate-900">
               <TextareaAutosize
                 type="text"
                 name="bio"
@@ -270,7 +287,7 @@ const EditModal = ({ image,  }) => {
                 value={bio}
                 minRows={3}
                 onChange={handleChange}
-                style={{ width: 300, outline: "none" }}
+                style={{ width: 300, outline: "none",color: themeMode === 'dark' ? 'white' : 'black', backgroundColor: themeMode === 'dark' ?  'rgb(15 23 42)' : 'white'}}
                 placeholder="Say something about you..."
               />
             </div>

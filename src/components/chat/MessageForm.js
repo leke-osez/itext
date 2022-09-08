@@ -22,7 +22,7 @@ const MessageForm = ({handleSubmit, handleChange, value, handleChangePhoto}) => 
   return (
     <form onSubmit={handleSend}>
 
-    <div className='flex gap-2 items-end  w-full md:w-[500px]'>
+    <div className='flex gap-2 items-end  w-full '>
             <label htmlFor='messagePic'><CameraAlt className = 'upload_image dark:text-white/90' /></label>
             <input
                 style={{display: 'none'}}

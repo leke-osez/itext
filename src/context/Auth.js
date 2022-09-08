@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
   const [drops, setDrops] = useState(null);
   const [activeDrop, setActiveDrop] = useState(null)
   const [dropMenuOpen, setDropMenuOpen] = useState(false)
+  const [dropTracker, setDropTracker] = useState(false)
 
 
   // USER RECOMMENDATIONS
@@ -65,6 +66,7 @@ export const AuthProvider = ({ children }) => {
   const [accountDeleteModal, setDeleteAccountModal] = useState(false)
 
   const [reauthModal, setReauthModal] = useState(false)
+
 
   const value = {
     user, setUser, 
@@ -88,7 +90,8 @@ export const AuthProvider = ({ children }) => {
     setDropMenuOpen, dropMenuOpen,
     themeMode, setThemeMode,
     accountDeleteModal, setDeleteAccountModal,
-    reauthModal, setReauthModal
+    reauthModal, setReauthModal,
+    dropTracker, setDropTracker
   };
 
   // HANDLE AUTHENTICATION
@@ -128,7 +131,12 @@ export const AuthProvider = ({ children }) => {
         const userRec = await getDocs(q)
 
         userRec.forEach(user=>{
-          recommendations.push(user.data())
+          const userData = user.data()
+          const checkIfUserIsFollowing = userData.followers.findIndex(follower => follower === auth.currentUser.uid)
+          
+          if (checkIfUserIsFollowing === -1){
+            recommendations.push(user.data())
+          }
         })
         setUserRecommendations(recommendations)
       }

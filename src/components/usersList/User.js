@@ -45,9 +45,9 @@ const User = ({ profile, selectedUser, isUserList, user1 }) => {
           )}
         </div>
         {data && (
-          <div className=" bg-green flex w-full dark:text-white/90 ">
+          <div className=" bg-green flex w-full relative dark:text-white/90 ">
             {/* <p className="mr-1">{data.from === user1 ? "You:  " : null}</p> */}
-            <p className="truncate dark:text-white/90 text-black/60 xl:w-[80%] md:w-[70%] w-[60%]">
+            <p className="truncate w-[15%] mb-2 s640:w-[18%] s700:w-[20%] s768:w-[18%] s885:w-[20%] s1000:w-[23%] s1500:w-[25%] s2000:w-[30%] overflow-x-hidden text-sm dark:text-white/90 text-black/60 fixed">
               <span></span>
               {data.lastMsg ? (
                 data.lastMsg

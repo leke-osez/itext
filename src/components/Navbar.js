@@ -83,7 +83,7 @@ const Navbar = ({isMenu, showMenu, cancelMenu}) => {
                 <p className="text-sm sm:block hidden">
                   {userProfile && userProfile.name}
                 </p>
-                <Avatar src={userProfile ? userProfile.avatar : ""} />
+                <Avatar src={userProfile ? userProfile?.avatar : ""} />
               </div>
             </Link>
 

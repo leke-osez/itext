@@ -31,7 +31,7 @@ const DropsBox = () => {
   const [dropData, setDropData] = useState({ dropText: "", files: null });
   const [errorInput, setErrorInput] = useState({ fileLength: "" });
   const [isLoading, setIsLoading] = useState(false)
-  const {userProfile: user} = useStateAuth()
+  const {userProfile: user, dropTracker, setDropTracker} = useStateAuth()
   const { dropText, files } = dropData;
   var fileLength = dropData?.files ? Object.keys(dropData?.files).length : 0;
 
@@ -97,7 +97,7 @@ const DropsBox = () => {
         likes:[]
       })
     }
-
+    setDropTracker(!dropTracker)
     setDropData({ dropText: '', files: null });
     setIsLoading(false)
   }
