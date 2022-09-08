@@ -114,7 +114,7 @@ const Layout = () => {
       {/* PAGE LAYOUT */}
       {/*Menu Large devices */}
       <div
-        className={` s500:relative hidden left-0 right-0 s500:top-0  s500:flex s500:w-fit md:w-[23%] s500:min-w-fit z-[40]`}
+        className={` s500:sticky hidden left-0 right-0 s500:top-0  s500:flex s500:w-fit md:w-[23%] s500:min-w-fit z-[40]`}
       >
         <SideMenu />
       </div>
