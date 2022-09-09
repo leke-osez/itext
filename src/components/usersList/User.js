@@ -38,16 +38,16 @@ const User = ({ profile, selectedUser, isUserList, user1 }) => {
     >
       <Avatar src={avatar} className="usersAvatar" />
       <div className="flex flex-col w-full">
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3">
           <p className="md:text-[1rem]  dark:text-white/90 text-base">{name}</p>
           {isOnline && (
             <div className="h-[.4rem] aspect-square rounded-full bg-green-500 p-0"></div>
           )}
         </div>
         {data && (
-          <div className=" bg-green flex w-full relative dark:text-white/90 ">
+          <div className=" bg-green flex w-full h-[2rem] relative dark:text-white/90 ">
             {/* <p className="mr-1">{data.from === user1 ? "You:  " : null}</p> */}
-            <p className="truncate w-[15%] mb-2 s640:w-[18%] s700:w-[20%] s768:w-[18%] s885:w-[20%] s1000:w-[23%] s1500:w-[25%] s2000:w-[30%] overflow-x-hidden text-sm dark:text-white/90 text-black/60 fixed">
+            <p className="truncate w-[80%] mb-2 overflow-x-hidden text-sm dark:text-white/90 text-black/60 absolute">
               <span></span>
               {data.lastMsg ? (
                 data.lastMsg

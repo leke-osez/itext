@@ -323,8 +323,8 @@ const Messages = () => {
   return (
     <div className="sm:flex  w-full body_screen  s500:h-[100vh]">
       <div
-        className={`w-full s500:w-[40%]  md:w-[35%] sm:border-r-[1px] dark:border-none flex-col gap-3  dark:bg-slate-800 h-full  sm:top-0  sm:flex z-[30] ${
-          chatList ? "sm:flex " : "sm:flex hidden"
+        className={`w-full fixed s640:static s640:w-[40%]  md:w-[35%] sm:border-r-[1px] dark:border-none flex-col gap-3  dark:bg-slate-800 h-full  sm:top-0  sm:flex z-[30] ${
+          chatList ? "s640:flex " : "s640:flex hidden"
         }`}
       >
         {appUsers ? (
@@ -341,7 +341,7 @@ const Messages = () => {
       <div className="  flex flex-col  h-full w-full s640:w-[60%]  md:w-[65%] ">
         {chat ? (
           <div className="h-full flex flex-col w-full">
-            <nav className="shadow-sm p-2 h-fit flex items-center">
+            <nav className="shadow-sm p-2 h-fit flex items-center sticky top-0  bg-white dark:bg-slate-800 z-[30]">
               <button
                 className="sm:hidden mr-1 dark:text-white/90"
                 onClick={() => setChatList(true)}
