@@ -179,7 +179,7 @@ const Layout = () => {
         )}
 
         {/* DYNAMIC CONTENT */}
-        <div className="dark:bg-slate-900 min-h-[100vh] s500:min-h-screen">
+        <div className={`dark:bg-slate-900 min-h-[100vh] s500:min-h-screen`}>
           
         <Outlet />
         </div>

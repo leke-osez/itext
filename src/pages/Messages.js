@@ -323,7 +323,7 @@ const Messages = () => {
   return (
     <div className="sm:flex  w-full body_screen  s500:h-[100vh]">
       <div
-        className={`w-full fixed s640:static s640:w-[40%]  md:w-[35%] sm:border-r-[1px] dark:border-none flex-col gap-3  dark:bg-slate-800 h-full  sm:top-0  sm:flex z-[30] ${
+        className={`w-full fixed s640:static s640:w-[40%]  md:w-[35%] sm:border-r-[1px] dark:border-none flex-col gap-3  dark:bg-slate-800 h-full  sm:top-0  sm:flex z-[40] ${
           chatList ? "s640:flex " : "s640:flex hidden"
         }`}
       >
