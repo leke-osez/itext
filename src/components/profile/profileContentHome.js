@@ -18,7 +18,7 @@ const ProfileContentsHome = () => {
       try {   
 
 
-            console.log('empty')
+       
                 const q = query(
                     dropsRef,
                     where("authorId", "==", userProfile.uid),

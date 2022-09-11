@@ -24,7 +24,7 @@ const Comment = ({ comment, likeComment }) => {
   }
 
   const selectProfile = ()=>{
-    console.log('nav prof ')
+   
     navigate(`/profile/${comment?.author}`)
   }
   return (

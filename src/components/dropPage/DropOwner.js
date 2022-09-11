@@ -26,7 +26,7 @@ const DropOwner = ({drop, likeDrop}) => {
     return true
   }
   const selectProfile = ()=>{
-    console.log('nav prof ')
+    
     navigate(`/profile/${drop?.authorId}`)
   }
   return (

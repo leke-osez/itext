@@ -54,7 +54,7 @@ const DropsBox = () => {
   };
 
   const cancelPrevImage = (index) => {
-    console.log(index);
+    
     setDropData({ ...dropData, files: files.filter((file, i) => index !== i) });
   };
 
@@ -164,7 +164,7 @@ const DropsBox = () => {
                   );
                 }
                 if (fileLength === 3 && i === 0) {
-                  console.log(file);
+        
                   return (
                     <DropFile
                       onCancel={cancelPrevImage}

@@ -32,7 +32,6 @@ const Friends = () => {
     
   };
 
-  console.log(msgs)
   useEffect(() => {
 
     let unsub;

@@ -38,7 +38,7 @@ const SideMenu = () => {
       getNotifications(userProfile?.uid, handleNotifications)
     
   }, [userProfile]);
-  console.log('test')
+
   return (
     <div className="relative dark:bg-slate-800 dark:text-white/90 transition duration-50  w-full  rounded-t-[2rem] s500:h-screen  s500:rounded-none s500:sticky s500:top-0 bottom-0  border-r-[.3px] dark:border-white/40 dark:border-none bg-white">
 

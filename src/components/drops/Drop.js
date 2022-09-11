@@ -43,7 +43,7 @@ const Drop = ({ drop, likeDrop, drops }) => {
   };
 
   const selectProfile = () => {
-    console.log("nav prof ");
+    
     navigate(`/profile/${drop?.authorId}`);
   };
 
@@ -56,7 +56,6 @@ const Drop = ({ drop, likeDrop, drops }) => {
     setDrops(
       drops?.map((dropToSelect) => {
         if (dropToSelect.id === drop.id) {
-          console.log(dropToSelect.id);
           dropToSelect.menuActive = true;
           return dropToSelect;
         }

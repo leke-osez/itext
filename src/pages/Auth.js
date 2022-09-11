@@ -54,7 +54,6 @@ const Auth = ({ signUp }) => {
         bgImg: '',
         bgImgPath: ''
       });
-      console.log(done);
       setData(initialState);
       navigate("/", { replace: true });
     } catch (err) {

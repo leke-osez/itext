@@ -103,7 +103,6 @@ const DropPage = ({dropPage}) => {
 
   const likeComment = async(comment)=>{
     const commentLikes = ()=>{
-      console.log(comment)
       const commentIndex = comments?.findIndex(commentItem=>commentItem.id === comment.id)
       
       const commentItem = comments[commentIndex]
@@ -116,7 +115,6 @@ const DropPage = ({dropPage}) => {
       return commentItem.likes.filter(like=> like !== comment.likeId)
     }
 
-    console.log(activeDrop.id); console.log(comment.id)
     // DATABASE UPDATE
     try {
       const docRef = doc(db, "comments", activeDrop.id,'comment', comment.id )
@@ -164,13 +162,11 @@ const DropPage = ({dropPage}) => {
             const data = document.data();
             commentList[document.id] = {...data,id:document.id};
             const authorRef = doc(db, "users", data.author)
-            console.log(document.id)
             getDoc(authorRef).then((userDoc)=>{
                 const authorData = userDoc.data()
                 
                 commentList[document.id].name = authorData.name;
                 commentList[document.id].avatar = authorData.avatar;
-                console.log(authorData.uid)
                 countRef.current = countRef.current + 1
                 if (countRef.current === commentsArray.length){
                   setComments(commentsArray)
@@ -178,7 +174,6 @@ const DropPage = ({dropPage}) => {
             })
     
         });
-        console.log('out')
         var commentsArray = Object.values(commentList) 
 
         } catch (error) {
