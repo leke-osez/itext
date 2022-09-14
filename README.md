@@ -1,4 +1,18 @@
 # Trickle - The Social media app
+<p align="center" style = "float:left">
+  <img src="public/home.png"  height="350" title="hover text">
+</p>
+<p align="center" style = "float:left">
+  <img src="public/chat.png"  height="350" title="hover text">
+</p>
+<p align="center" style = "float:left">
+  <img src="public/profile.png"  height="350" title="hover text">
+</p>
+
+
+## SEE DEMO VIA THIS LINK
+https://trickle.vercel.app/
+
 FKA itext because it was originally intended to be just a chat app but i blew it out of proportion, I'm sorry <br>
 Side gist - The name trickle was birthed by my kid sis which represents a drop of water so the whole app plays on the name.
 
