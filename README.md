@@ -1,17 +1,8 @@
 # Trickle - The Social media app
-<div style = "display:flex">
-  <p align="center" style = "float:left">
-  <img src="public/home.png"  height="350" title="hover text">
-</p>
-<p align="center" style = "float:left">
-  <img src="public/chat.png"  height="350" title="hover text">
-</p>
+  
 <p align="center" style = "float:left">
   <img src="public/profile.png"  height="350" title="hover text">
 </p>
-</div>
-
-
 
 ## SEE DEMO VIA THIS LINK
 https://trickle.vercel.app/
